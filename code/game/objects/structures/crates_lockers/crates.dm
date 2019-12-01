@@ -3,7 +3,7 @@
 /obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/storage_vr.dmi'	//VOREStation edit
 	icon_state = "crate"
 	icon_opened = "crateopen"
 	icon_closed = "crate"
@@ -94,7 +94,7 @@
 			user.drop_item()
 			W.forceMove(src)
 			return
-	else if(istype(W, /obj/item/weapon/wirecutters))
+	else if(W.is_wirecutter())
 		if(rigged)
 			user  << "<span class='notice'>You cut away the wiring.</span>"
 			playsound(src.loc, W.usesound, 100, 1)
@@ -191,7 +191,7 @@
 		src.toggle(user)
 
 /obj/structure/closet/crate/secure/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(is_type_in_list(W, list(/obj/item/weapon/packageWrap, /obj/item/stack/cable_coil, /obj/item/device/radio/electropack, /obj/item/weapon/wirecutters)))
+	if(is_type_in_list(W, list(/obj/item/weapon/packageWrap, /obj/item/stack/cable_coil, /obj/item/device/radio/electropack, /obj/item/weapon/tool/wirecutters)))
 		return ..()
 	if(istype(W, /obj/item/weapon/melee/energy/blade))
 		emag_act(INFINITY, user)
@@ -300,6 +300,9 @@
 
 /obj/structure/closet/crate/solar
 	name = "solar pack crate"
+	icon_state = "engi_crate"		//VOREStation Edit
+	icon_opened = "engi_crateopen"	//VOREStation Edit
+	icon_closed = "engi_crate"		//VOREStation Edit
 
 	starts_with = list(
 		/obj/item/solar_assembly = 21,
@@ -350,12 +353,13 @@
 	desc = "A crate of emergency rations."
 
 	starts_with = list(
-		/obj/item/weapon/reagent_containers/food/snacks/liquidfood = 4)
+		/obj/random/mre = 6)
 
 
 /obj/structure/closet/crate/bin
 	name = "large bin"
 	desc = "A large bin."
+	icon = 'icons/obj/storage.dmi'	//VOREStation edit
 	icon_state = "largebin"
 	icon_opened = "largebinopen"
 	icon_closed = "largebin"
@@ -424,6 +428,7 @@
 /obj/structure/closet/crate/secure/bin
 	name = "secure bin"
 	desc = "A secure bin."
+	icon = 'icons/obj/storage.dmi'	//VOREStation edit
 	icon_state = "largebins"
 	icon_opened = "largebinsopen"
 	icon_closed = "largebins"
@@ -436,7 +441,7 @@
 /obj/structure/closet/crate/large
 	name = "large crate"
 	desc = "A hefty metal crate."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/storage_vr.dmi'	//VOREStation Edit
 	icon_state = "largemetal"
 	icon_opened = "largemetalopen"
 	icon_closed = "largemetal"
@@ -464,10 +469,10 @@
 /obj/structure/closet/crate/secure/large
 	name = "large crate"
 	desc = "A hefty metal crate with an electronic locking system."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "largemetal"
-	icon_opened = "largemetalopen"
-	icon_closed = "largemetal"
+	icon = 'icons/obj/storage_vr.dmi'		//VOREStation Edit
+	icon_state = "largemetalsecure"			//VOREStation Edit
+	icon_opened = "largemetalsecureopen"	//VOREStation Edit
+	icon_closed = "largemetalsecure"		//VOREStation Edit
 	redlight = "largemetalr"
 	greenlight = "largemetalg"
 

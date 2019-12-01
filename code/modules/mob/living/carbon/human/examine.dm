@@ -2,7 +2,7 @@
 	var/skip_gear = 0
 	var/skip_body = 0
 
-	if(alpha <= 50)
+	if(alpha <= EFFECTIVE_INVIS)
 		src.loc.examine(user)
 		return
 
@@ -295,6 +295,7 @@
 	msg += attempt_vr(src,"examine_pickup_size",args) //VOREStation Code
 	msg += attempt_vr(src,"examine_step_size",args) //VOREStation Code
 	msg += attempt_vr(src,"examine_nif",args) //VOREStation Code
+	msg += attempt_vr(src,"examine_chimera",args) //VOREStation Code
 
 	if(mSmallsize in mutations)
 		msg += "[T.He] [T.is] very short!<br>"
@@ -439,13 +440,21 @@
 	// VOREStation Start
 	if(ooc_notes)
 		msg += "<span class = 'deptradio'>OOC Notes:</span> <a href='?src=\ref[src];ooc_notes=1'>\[View\]</a>\n"
+
+	msg += "<span class='deptradio'><a href='?src=\ref[src];vore_prefs=1'>\[Mechanical Vore Preferences\]</a></span>\n"
+
 	// VOREStation End
 	msg += "*---------*</span><br>"
 	msg += applying_pressure
+
+	var/show_descs = show_descriptors_to(user)
+	if(show_descs)
+		msg += "<span class='notice'>[jointext(show_descs, "<br>")]</span>"
+
 	if(pose)
 		if(!findtext(pose, regex("\[.?!]$"))) // Will be zero if the last character is not a member of [.?!]
 			pose = addtext(pose,".") //Makes sure all emotes end with a period.
-		msg += "[T.He] [pose]"
+		msg += "<br>[T.He] [pose]"
 
 	to_chat(user, jointext(msg, null))
 

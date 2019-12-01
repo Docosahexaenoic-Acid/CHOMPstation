@@ -1,4 +1,4 @@
-/datum/supply_packs/security/guardbeast
+/*/datum/supply_pack/security/guardbeast //VORESTATION AI TEMPORARY REMOVAL
 	name = "VARMAcorp autoNOMous security solution"
 	cost = 150
 	containertype = /obj/structure/largecrate/animal/guardbeast
@@ -6,8 +6,9 @@
 	access = list(
 			access_security,
 			access_xenobiology)
+	one_access = TRUE
 
-/datum/supply_packs/security/guardmutant
+/datum/supply_pack/security/guardmutant
 	name = "VARMAcorp autoNOMous security solution for hostile environments"
 	cost = 250
 	containertype = /obj/structure/largecrate/animal/guardmutant
@@ -15,8 +16,13 @@
 	access = list(
 			access_security,
 			access_xenobiology)
+	one_access = TRUE
+*/
 
-/datum/supply_packs/security/biosuit
+/datum/supply_pack/randomised/security/armor
+	access = access_armory
+
+/datum/supply_pack/security/biosuit
 	contains = list(
 			/obj/item/clothing/head/bio_hood/security = 3,
 			/obj/item/clothing/under/rank/security = 3,
@@ -28,3 +34,23 @@
 			/obj/item/weapon/storage/box/gloves
 			)
 	cost = 40
+
+/datum/supply_pack/security/trackingimplant
+	name = "Implants - Tracking"
+	contains = list(
+			/obj/item/weapon/storage/box/trackimp = 1
+			)
+	cost = 25
+	containertype = /obj/structure/closet/crate/secure
+	containername = "Tracking implants"
+	access = access_security
+
+/datum/supply_pack/security/chemicalimplant
+	name = "Implants - Chemical"
+	contains = list(
+			/obj/item/weapon/storage/box/chemimp = 1
+			)
+	cost = 25
+	containertype = /obj/structure/closet/crate/secure
+	containername = "Chemical implants"
+	access = access_security

@@ -1,4 +1,4 @@
-/mob/living/simple_animal/lizard
+/mob/living/simple_mob/lizard
 	name = "Lizard"
 	desc = "A cute tiny lizard."
 	faction = "lizard"

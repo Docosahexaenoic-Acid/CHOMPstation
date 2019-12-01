@@ -7,11 +7,6 @@
 	var/obj/item/weapon/cell/device/cell
 	var/enabled = 0
 
-/obj/item/weapon/shield_diffuser/update_icon()
-	if(enabled)
-		icon_state = "hdiffuser_on"
-	else
-		icon_state = "hdiffuser_off"
 
 /obj/item/weapon/shield_diffuser/New()
 	cell = new(src)
@@ -21,8 +16,11 @@
 	qdel(cell)
 	cell = null
 	if(enabled)
-		processing_objects.Remove(src)
+		STOP_PROCESSING(SSobj, src)
 	. = ..()
+
+/obj/item/weapon/shield_diffuser/get_cell()
+	return cell
 
 /obj/item/weapon/shield_diffuser/process()
 	if(!enabled)
@@ -34,13 +32,19 @@
 			if(istype(S) && cell.checked_use(10 KILOWATTS * CELLRATE))
 				qdel(S)
 
+/obj/item/weapon/shield_diffuser/update_icon()
+	if(enabled)
+		icon_state = "hdiffuser_on"
+	else
+		icon_state = "hdiffuser_off"
+
 /obj/item/weapon/shield_diffuser/attack_self()
 	enabled = !enabled
 	update_icon()
 	if(enabled)
-		processing_objects.Add(src)
+		START_PROCESSING(SSobj, src)
 	else
-		processing_objects.Remove(src)
+		STOP_PROCESSING(SSobj, src)
 	to_chat(usr, "You turn \the [src] [enabled ? "on" : "off"].")
 
 /obj/item/weapon/shield_diffuser/examine()

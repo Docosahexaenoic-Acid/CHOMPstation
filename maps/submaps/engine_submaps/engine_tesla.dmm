@@ -34,8 +34,7 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 10;
-	icon_state = "intact";
-	
+	icon_state = "intact"
 	},
 /turf/simulated/floor,
 /area/engineering/engine_gas)
@@ -99,11 +98,9 @@
 /turf/simulated/floor/tiled/dark,
 /area/engineering/engine_room)
 "ap" = (
-/obj/machinery/portable_atmospherics/canister/phoron,
 /obj/machinery/atmospherics/pipe/manifold/hidden{
 	dir = 4;
-	icon_state = "map";
-	
+	icon_state = "map"
 	},
 /turf/simulated/floor,
 /area/engineering/engine_gas)
@@ -113,7 +110,10 @@
 	icon_state = "alarm0";
 	pixel_x = 24
 	},
-/obj/structure/dispenser/phoron,
+/obj/structure/table/standard,
+/obj/item/stack/cable_coil/random,
+/obj/item/weapon/tool/wrench,
+/obj/item/weapon/tool/screwdriver,
 /turf/simulated/floor,
 /area/engineering/engine_gas)
 "ar" = (
@@ -220,8 +220,7 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 10;
-	icon_state = "intact";
-	
+	icon_state = "intact"
 	},
 /obj/effect/floor_decal/borderfloor{
 	dir = 1
@@ -289,18 +288,13 @@
 	dir = 1
 	},
 /obj/structure/table/standard,
-/obj/item/weapon/circuitboard/tesla_coil{
-	pixel_x = -2;
-	pixel_y = -2
-	},
-/obj/item/weapon/circuitboard/tesla_coil{
+/obj/item/weapon/circuitboard/grounding_rod{
 	pixel_x = 2;
 	pixel_y = 2
 	},
-/obj/item/weapon/stock_parts/capacitor,
-/obj/item/weapon/stock_parts/capacitor{
+/obj/item/weapon/circuitboard/grounding_rod{
 	pixel_x = -2;
-	pixel_y = 2
+	pixel_y = -2
 	},
 /turf/simulated/floor,
 /area/engineering/engine_gas)
@@ -326,10 +320,6 @@
 	icon_state = "warningcorner";
 	dir = 1
 	},
-/obj/effect/floor_decal/industrial/warning/corner{
-	icon_state = "warningcorner";
-	dir = 8
-	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aE" = (
@@ -354,50 +344,37 @@
 	},
 /obj/machinery/door/airlock/engineering,
 /obj/machinery/atmospherics/pipe/simple/hidden,
+/obj/machinery/door/firedoor/glass,
 /turf/simulated/floor,
 /area/engineering/engine_gas)
 "aG" = (
-/obj/structure/grille,
-/obj/structure/window/reinforced/full,
-/obj/machinery/door/firedoor/glass,
-/obj/structure/window/reinforced{
-	dir = 8;
-	health = 1e+006
+/obj/machinery/button/remote/blast_door{
+	desc = "A remote control-switch for the engine charging port.";
+	dir = 1;
+	id = "SupermatterPort";
+	name = "Observation Blast Doors";
+	pixel_x = -4;
+	pixel_y = -24;
+	req_access = list(10)
 	},
-/turf/simulated/floor,
+/turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aH" = (
-/obj/machinery/power/rad_collector,
-/obj/structure/cable/yellow{
-	d2 = 4;
-	icon_state = "0-4"
+/obj/machinery/button/remote/blast_door{
+	desc = "A remote control-switch for the engine charging port.";
+	id = "SupermatterPort";
+	name = "Observation Blast Doors";
+	pixel_x = -4;
+	pixel_y = 24;
+	req_access = list(10)
 	},
-/obj/machinery/light/small{
-	dir = 1
-	},
-/turf/simulated/floor,
+/turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aI" = (
-/obj/structure/cable/yellow{
-	d1 = 2;
-	d2 = 8;
-	icon_state = "2-8"
-	},
-/obj/machinery/door/blast/regular{
-	density = 0;
-	dir = 2;
-	icon_state = "pdoor0";
-	id = "SupermatterPort";
-	layer = 3.3;
-	name = "Reactor Blast Door";
-	opacity = 0
-	},
-/turf/simulated/floor,
-/area/engineering/engine_room)
+/obj/item/weapon/extinguisher,
+/turf/space,
+/area/space)
 "aJ" = (
-/obj/effect/floor_decal/industrial/warning{
-	dir = 8
-	},
 /obj/machinery/atmospherics/pipe/simple/hidden,
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -450,8 +427,7 @@
 /obj/effect/floor_decal/borderfloor{
 	dir = 1;
 	icon_state = "borderfloor";
-	pixel_y = 0;
-	
+	pixel_y = 0
 	},
 /obj/effect/floor_decal/corner/yellow/border{
 	dir = 1
@@ -509,67 +485,37 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aP" = (
-/obj/machinery/power/rad_collector,
-/obj/structure/cable/yellow{
-	d2 = 4;
-	icon_state = "0-4"
-	},
-/turf/simulated/floor,
-/area/engineering/engine_room)
-"aQ" = (
-/obj/structure/cable/yellow{
-	d1 = 1;
-	d2 = 4;
-	icon_state = "1-4"
-	},
 /obj/structure/cable/yellow{
 	d1 = 2;
 	d2 = 4;
 	icon_state = "2-4"
 	},
 /obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
+	d1 = 1;
+	d2 = 4;
+	icon_state = "1-4"
 	},
-/obj/machinery/door/blast/regular{
-	density = 0;
-	dir = 2;
-	icon_state = "pdoor0";
-	id = "SupermatterPort";
-	layer = 3.3;
-	name = "Reactor Blast Door";
-	opacity = 0
-	},
-/turf/simulated/floor,
-/area/engineering/engine_room)
-"aR" = (
-/obj/effect/floor_decal/industrial/warning{
-	dir = 8
-	},
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
-	},
+/turf/simulated/floor/airless,
+/area/space)
+"aQ" = (
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 5;
-	icon_state = "intact";
-	
+	icon_state = "intact"
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
-"aS" = (
+"aR" = (
 /obj/structure/cable/cyan{
 	d1 = 1;
 	d2 = 2;
 	icon_state = "1-2"
 	},
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
+/obj/machinery/atmospherics/pipe/simple/hidden{
+	dir = 4
 	},
+/turf/simulated/floor/tiled,
+/area/engineering/engine_room)
+"aS" = (
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 4
 	},
@@ -587,11 +533,6 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aU" = (
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
-	},
 /obj/effect/floor_decal/steeldecal/steel_decals_central5{
 	icon_state = "steel_decals_central5";
 	dir = 8
@@ -608,11 +549,6 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "aV" = (
-/obj/structure/cable/yellow{
-	d1 = 2;
-	d2 = 8;
-	icon_state = "2-8"
-	},
 /obj/structure/cable/cyan{
 	d1 = 1;
 	d2 = 4;
@@ -626,8 +562,7 @@
 	},
 /obj/machinery/atmospherics/pipe/manifold/hidden{
 	dir = 4;
-	icon_state = "map";
-	
+	icon_state = "map"
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -657,34 +592,36 @@
 /turf/simulated/floor/airless,
 /area/space)
 "aY" = (
-/obj/structure/cable/yellow{
-	d1 = 1;
-	d2 = 8;
-	icon_state = "1-8"
+/obj/structure/grille,
+/obj/structure/window/reinforced/full,
+/obj/machinery/door/firedoor/glass,
+/obj/structure/window/reinforced{
+	dir = 8;
+	health = 1e+006
+	},
+/obj/structure/window/reinforced{
+	dir = 1
 	},
 /obj/machinery/door/blast/regular{
 	density = 0;
-	dir = 2;
 	icon_state = "pdoor0";
-	id = "SupermatterPort";
-	layer = 3.3;
-	name = "Reactor Blast Door";
+	id = "EngineRadiatorViewport";
+	name = "Engine Radiator Viewport Shutter";
 	opacity = 0
 	},
 /turf/simulated/floor,
-/area/engineering/engine_room)
+/area/submap/pa_room)
 "aZ" = (
-/obj/effect/floor_decal/industrial/warning{
-	dir = 8
+/obj/structure/cable/yellow{
+	d1 = 2;
+	d2 = 4;
+	icon_state = "2-4"
 	},
-/obj/machinery/button/remote/blast_door{
-	desc = "A remote control-switch for the engine charging port.";
-	dir = 1;
-	id = "SupermatterPort";
-	name = "Radiation Collector Blast Doors";
-	pixel_x = -4;
-	pixel_y = -24;
-	req_access = list(10)
+/obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
+/obj/machinery/atmospherics/pipe/simple/hidden/supply,
+/obj/machinery/atmospherics/pipe/simple/hidden,
+/obj/effect/floor_decal/borderfloor/corner{
+	dir = 8
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -712,24 +649,23 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "bd" = (
-/obj/structure/cable/yellow{
-	d1 = 1;
-	d2 = 2;
-	icon_state = "1-2"
+/obj/structure/grille,
+/obj/structure/window/reinforced/full,
+/obj/machinery/door/firedoor/glass,
+/obj/structure/window/reinforced{
+	dir = 8;
+	health = 1e+006
 	},
-/obj/structure/cable/yellow{
-	d1 = 2;
-	d2 = 4;
-	icon_state = "2-4"
+/obj/structure/window/reinforced,
+/obj/machinery/door/blast/regular{
+	density = 0;
+	icon_state = "pdoor0";
+	id = "EngineRadiatorViewport";
+	name = "Engine Radiator Viewport Shutter";
+	opacity = 0
 	},
-/obj/machinery/atmospherics/pipe/simple/hidden/scrubbers,
-/obj/machinery/atmospherics/pipe/simple/hidden/supply,
-/obj/machinery/atmospherics/pipe/simple/hidden,
-/obj/effect/floor_decal/borderfloor/corner{
-	dir = 8
-	},
-/turf/simulated/floor/tiled,
-/area/engineering/engine_room)
+/turf/simulated/floor,
+/area/submap/pa_room)
 "be" = (
 /obj/structure/cable/yellow{
 	d1 = 4;
@@ -744,31 +680,12 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "bf" = (
-/obj/structure/grille,
-/obj/structure/window/reinforced/full,
-/obj/machinery/door/firedoor/glass,
-/obj/structure/window/reinforced{
-	dir = 8;
-	health = 1e+006
-	},
-/obj/structure/window/reinforced{
-	dir = 1
-	},
-/turf/simulated/floor,
+/turf/simulated/floor/tiled,
 /area/submap/pa_room)
 "bg" = (
-/obj/structure/grille,
-/obj/structure/window/reinforced/full,
-/obj/machinery/door/firedoor/glass,
-/obj/machinery/door/blast/regular{
-	density = 0;
-	icon_state = "pdoor0";
-	id = "EngineRadiatorViewport";
-	name = "Engine Radiator Viewport Shutter";
-	opacity = 0
-	},
-/turf/simulated/floor,
-/area/submap/pa_room)
+/obj/machinery/power/grounding_rod,
+/turf/simulated/floor/airless,
+/area/space)
 "bh" = (
 /obj/structure/sign/securearea{
 	desc = "A warning sign which reads 'RADIOACTIVE AREA'";
@@ -783,14 +700,18 @@
 /turf/simulated/wall/r_wall,
 /area/submap/pa_room)
 "bj" = (
-/obj/structure/cable/cyan{
-	d1 = 1;
-	d2 = 2;
-	icon_state = "1-2"
+/obj/structure/cable/yellow{
+	d1 = 4;
+	d2 = 8;
+	icon_state = "4-8"
 	},
-/obj/machinery/door/airlock/glass_engineering,
-/turf/simulated/floor/tiled,
-/area/submap/pa_room)
+/obj/machinery/power/tesla_coil,
+/obj/structure/cable/yellow{
+	d2 = 4;
+	icon_state = "0-4"
+	},
+/turf/simulated/floor/airless,
+/area/space)
 "bk" = (
 /obj/structure/cable/yellow{
 	d1 = 1;
@@ -857,9 +778,14 @@
 /turf/simulated/floor/tiled/techfloor/grid,
 /area/submap/pa_room)
 "bp" = (
-/obj/item/weapon/screwdriver,
-/turf/simulated/floor/tiled,
-/area/submap/pa_room)
+/obj/structure/cable/yellow{
+	d1 = 2;
+	d2 = 8;
+	icon_state = "2-8"
+	},
+/obj/item/clothing/head/hardhat,
+/turf/simulated/floor/airless,
+/area/space)
 "bq" = (
 /obj/effect/floor_decal/steeldecal,
 /turf/simulated/floor/tiled,
@@ -951,11 +877,14 @@
 /turf/simulated/floor/tiled/techfloor,
 /area/submap/pa_room)
 "bA" = (
-/obj/effect/floor_decal/techfloor/orange{
-	dir = 5
+/obj/structure/cable/cyan{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
 	},
-/obj/item/stack/cable_coil/random,
-/turf/simulated/floor/tiled/techfloor,
+/obj/machinery/door/airlock/glass_engineering,
+/obj/machinery/door/firedoor/glass,
+/turf/simulated/floor/tiled,
 /area/submap/pa_room)
 "bB" = (
 /obj/machinery/atmospherics/unary/vent_scrubber/on,
@@ -1137,10 +1066,7 @@
 "bP" = (
 /obj/structure/grille,
 /obj/structure/window/reinforced/full,
-/obj/structure/window/reinforced{
-	dir = 8;
-	health = 1e+006
-	},
+/obj/machinery/door/firedoor/glass,
 /obj/machinery/door/blast/regular{
 	density = 0;
 	icon_state = "pdoor0";
@@ -1148,8 +1074,9 @@
 	name = "Engine Radiator Viewport Shutter";
 	opacity = 0
 	},
-/obj/machinery/door/firedoor/glass,
-/obj/effect/floor_decal/techfloor/orange/corner,
+/obj/structure/window/reinforced{
+	dir = 1
+	},
 /turf/simulated/floor,
 /area/submap/pa_room)
 "bQ" = (
@@ -1226,16 +1153,18 @@
 /turf/simulated/floor/tiled,
 /area/submap/pa_room)
 "bZ" = (
-/obj/structure/grille,
-/obj/structure/window/reinforced/full,
-/obj/machinery/door/firedoor/glass,
-/obj/structure/window/reinforced{
-	dir = 8;
-	health = 1e+006
+/obj/structure/cable/yellow{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
 	},
-/obj/structure/window/reinforced,
-/turf/simulated/floor,
-/area/submap/pa_room)
+/obj/structure/cable/yellow{
+	d2 = 2;
+	icon_state = "0-2"
+	},
+/obj/machinery/power/tesla_coil,
+/turf/simulated/floor/airless,
+/area/space)
 "ca" = (
 /obj/structure/cable/yellow{
 	d1 = 4;
@@ -1270,16 +1199,8 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "cc" = (
-/obj/effect/floor_decal/industrial/warning{
-	dir = 8
-	},
-/obj/machinery/button/remote/blast_door{
-	desc = "A remote control-switch for the engine charging port.";
-	id = "SupermatterPort";
-	name = "Radiation Collector Blast Doors";
-	pixel_x = -4;
-	pixel_y = 24;
-	req_access = list(10)
+/obj/machinery/atmospherics/pipe/simple/hidden{
+	dir = 6
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -1333,43 +1254,21 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "ch" = (
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
+/obj/machinery/atmospherics/pipe/simple/hidden{
+	dir = 4
 	},
 /obj/structure/cable/yellow{
 	d1 = 1;
 	d2 = 4;
 	icon_state = "1-4"
 	},
-/obj/structure/cable/yellow{
-	d1 = 2;
-	d2 = 4;
-	icon_state = "2-4"
-	},
-/obj/machinery/door/blast/regular{
-	density = 0;
-	dir = 2;
-	icon_state = "pdoor0";
-	id = "SupermatterPort";
-	layer = 3.3;
-	name = "Reactor Blast Door";
-	opacity = 0
-	},
-/turf/simulated/floor,
+/turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "ci" = (
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
-	},
-/obj/effect/floor_decal/industrial/warning{
+/obj/machinery/atmospherics/pipe/simple/hidden,
+/obj/effect/floor_decal/industrial/warning/corner{
+	icon_state = "warningcorner";
 	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/simple/hidden{
-	dir = 6
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -1409,8 +1308,7 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 9;
-	icon_state = "intact";
-	
+	icon_state = "intact"
 	},
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
@@ -1435,14 +1333,19 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "cm" = (
-/obj/machinery/power/rad_collector,
-/obj/structure/cable/yellow{
-	d2 = 4;
-	icon_state = "0-4"
+/obj/structure/grille,
+/obj/structure/window/reinforced/full,
+/obj/machinery/door/firedoor/glass,
+/obj/machinery/door/blast/regular{
+	density = 0;
+	icon_state = "pdoor0";
+	id = "EngineRadiatorViewport";
+	name = "Engine Radiator Viewport Shutter";
+	opacity = 0
 	},
-/obj/machinery/light/small,
+/obj/structure/window/reinforced,
 /turf/simulated/floor,
-/area/engineering/engine_room)
+/area/submap/pa_room)
 "cn" = (
 /obj/structure/cable/cyan{
 	d1 = 2;
@@ -1506,15 +1409,7 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "cs" = (
-/obj/machinery/power/emitter{
-	anchored = 1;
-	dir = 1;
-	state = 1
-	},
-/obj/structure/cable/cyan{
-	d2 = 2;
-	icon_state = "0-2"
-	},
+/obj/item/weapon/weldingtool,
 /turf/simulated/floor/airless,
 /area/space)
 "ct" = (
@@ -1606,8 +1501,7 @@
 	},
 /obj/machinery/atmospherics/pipe/simple/hidden{
 	dir = 9;
-	icon_state = "intact";
-	
+	icon_state = "intact"
 	},
 /obj/effect/floor_decal/borderfloor,
 /obj/effect/floor_decal/corner/yellow/border,
@@ -1638,7 +1532,6 @@
 	d2 = 4;
 	icon_state = "1-4"
 	},
-/obj/item/weapon/extinguisher,
 /turf/simulated/floor/airless,
 /area/space)
 "cz" = (
@@ -1682,26 +1575,38 @@
 /turf/simulated/wall/r_wall,
 /area/space)
 "cD" = (
-/obj/structure/lattice,
-/obj/machinery/power/grounding_rod,
-/turf/space,
-/area/space)
-"cE" = (
-/obj/structure/cable/yellow{
-	d2 = 4;
-	icon_state = "0-4"
+/obj/effect/floor_decal/techfloor/orange{
+	dir = 5
 	},
-/obj/machinery/power/grounding_rod{
-	anchored = 1
+/turf/simulated/floor/tiled/techfloor,
+/area/submap/pa_room)
+"cE" = (
+/obj/machinery/door/blast/regular{
+	density = 0;
+	dir = 2;
+	icon_state = "pdoor0";
+	id = "SupermatterPort";
+	layer = 2.7;
+	name = "Reactor Blast Door";
+	opacity = 0
+	},
+/obj/machinery/door/firedoor/glass,
+/obj/structure/grille,
+/obj/structure/window/reinforced/full,
+/obj/structure/window/reinforced{
+	dir = 8;
+	health = 1e+006
 	},
 /turf/simulated/floor,
 /area/engineering/engine_room)
 "cF" = (
-/obj/machinery/power/emitter{
-	anchored = 1;
-	state = 1
+/obj/structure/cable/yellow{
+	d1 = 1;
+	d2 = 2;
+	icon_state = "1-2"
 	},
-/obj/structure/cable/cyan,
+/obj/structure/cable/yellow,
+/obj/machinery/power/tesla_coil,
 /turf/simulated/floor/airless,
 /area/space)
 "cG" = (
@@ -1719,6 +1624,7 @@
 	d2 = 2;
 	icon_state = "1-2"
 	},
+/obj/machinery/door/firedoor/glass,
 /turf/simulated/floor/tiled,
 /area/submap/pa_room)
 "cI" = (
@@ -1730,21 +1636,9 @@
 /turf/simulated/floor/tiled,
 /area/engineering/engine_room)
 "cJ" = (
-/obj/structure/cable/yellow{
-	d1 = 4;
-	d2 = 8;
-	icon_state = "4-8"
-	},
-/obj/machinery/atmospherics/pipe/simple/hidden{
-	dir = 4
-	},
-/obj/structure/cable/yellow{
-	d1 = 1;
-	d2 = 4;
-	icon_state = "1-4"
-	},
-/turf/simulated/floor/tiled,
-/area/engineering/engine_room)
+/obj/item/weapon/tool/wirecutters,
+/turf/simulated/floor/airless,
+/area/space)
 "cK" = (
 /obj/structure/cable/yellow{
 	d1 = 4;
@@ -1754,10 +1648,14 @@
 /turf/simulated/floor/airless,
 /area/space)
 "cL" = (
-/obj/structure/cable/yellow{
-	d1 = 2;
-	d2 = 8;
-	icon_state = "2-8"
+/obj/structure/cable/cyan{
+	d2 = 2;
+	icon_state = "0-2"
+	},
+/obj/machinery/power/emitter{
+	dir = 1;
+	anchored = 1;
+	state = 1
 	},
 /turf/simulated/floor/airless,
 /area/space)
@@ -1780,42 +1678,12 @@
 	},
 /turf/simulated/floor/airless,
 /area/space)
-"cO" = (
-/obj/machinery/power/tesla_coil,
-/obj/structure/cable/yellow,
-/obj/structure/cable/yellow{
-	d2 = 2;
-	icon_state = "0-2"
-	},
-/turf/simulated/floor/airless,
-/area/space)
-"cP" = (
-/obj/structure/cable/yellow{
-	d2 = 4;
-	icon_state = "0-4"
-	},
-/obj/structure/cable/yellow{
-	d2 = 2;
-	icon_state = "0-2"
-	},
-/obj/structure/cable/yellow,
-/turf/simulated/floor/airless,
-/area/space)
 "cQ" = (
 /obj/structure/cable/yellow{
 	d1 = 1;
 	d2 = 8;
 	icon_state = "1-8"
 	},
-/turf/simulated/floor/airless,
-/area/space)
-"cR" = (
-/obj/structure/lattice,
-/obj/item/clothing/head/welding,
-/turf/space,
-/area/space)
-"cS" = (
-/obj/item/weapon/weldingtool,
 /turf/simulated/floor/airless,
 /area/space)
 
@@ -1897,15 +1765,15 @@ ab
 ab
 ab
 ab
-cD
+ab
+ad
 ab
 ab
 ab
 ab
 ab
+ad
 ab
-ab
-cD
 ab
 ab
 ab
@@ -1929,15 +1797,15 @@ ab
 ab
 ab
 ab
-ad
-ab
-ab
-ab
-ab
-ab
-ab
 ab
 ad
+ab
+ab
+ab
+ab
+ab
+ad
+ab
 ab
 ab
 ab
@@ -1960,17 +1828,17 @@ aj
 ab
 ab
 ab
-aj
-aj
-aj
-aj
-aj
-aj
-aj
-aj
-cS
-aj
-aj
+aI
+ab
+ad
+ab
+ab
+ab
+ab
+ab
+ad
+ab
+ab
 ab
 ab
 ab
@@ -1988,25 +1856,25 @@ ab
 ab
 ab
 ac
-ak
-cF
-ab
-ab
 aj
-aX
-ab
-ab
-aX
-ab
-ab
-ab
-ab
-aX
 aj
 ab
 ab
-cs
-cy
+ab
+bg
+aj
+aj
+aj
+aj
+aj
+aj
+aj
+bg
+ab
+ab
+ab
+cJ
+aj
 cC
 ab
 aa
@@ -2020,25 +1888,25 @@ ab
 ab
 ab
 ac
-al
-aj
+ak
+ar
 ad
-ad
-aj
-ab
-ab
-ab
-ad
-ab
-ab
-ab
-ab
-ab
-aj
 ad
 ad
 aj
-al
+aX
+ab
+ad
+ab
+ad
+ab
+aX
+aj
+ad
+ad
+ad
+cL
+cy
 cC
 ab
 aa
@@ -2056,17 +1924,17 @@ al
 aj
 ab
 ab
-aj
 ab
+co
 ab
 ab
 ad
+ab
 ad
-ad
 ab
 ab
+co
 ab
-aj
 ab
 ab
 aj
@@ -2088,17 +1956,17 @@ al
 aj
 ab
 ab
-aj
 ab
-ab
-cR
-aj
+cK
+ad
+ad
+cs
 aj
 aj
 ad
 ad
-aX
-aj
+cK
+ab
 ab
 ab
 aj
@@ -2118,21 +1986,21 @@ ab
 ac
 al
 aj
-ab
-ab
-co
-ab
-ab
 ad
+ad
+ad
+cK
+ab
+ab
 aj
 bE
 aj
+ab
+ab
+cK
 ad
-ab
-ab
-co
-ab
-ab
+ad
+ad
 aj
 al
 cC
@@ -2152,17 +2020,17 @@ al
 aj
 ab
 ab
-cK
-aX
-ad
-ad
-aj
-aj
-aj
-ad
-ab
 ab
 cK
+ad
+ad
+aj
+aj
+aj
+ad
+ad
+cK
+ab
 ab
 ab
 aj
@@ -2184,17 +2052,17 @@ al
 aj
 ab
 ab
-cK
 ab
+bj
 ab
 ab
 ad
+ab
 ad
-ad
 ab
 ab
+bj
 ab
-cK
 ab
 ab
 aj
@@ -2212,25 +2080,25 @@ ab
 ab
 ab
 ac
-al
-aj
+am
+ar
+ad
 ad
 ad
 cK
-ab
-ab
-ab
-ab
+aX
 ab
 ad
 ab
+ad
 ab
-ab
+aX
 cK
 ad
 ad
-aj
-al
+ad
+cL
+cz
 cC
 aa
 aa
@@ -2244,25 +2112,25 @@ ab
 ab
 ab
 ac
-am
-ar
+al
+aj
 ab
 ab
-cK
-aX
+ad
+bp
+cN
+bZ
+cN
+aP
+cN
+cF
+cN
+cQ
+ad
 ab
 ab
-ab
-ab
-aX
-ab
-ab
-aX
-cK
-ab
-ab
-cs
-cz
+aj
+al
 cC
 aa
 aa
@@ -2280,17 +2148,17 @@ al
 ad
 ab
 ab
-cL
-cN
-cN
-cO
-cN
-cP
-cN
-cO
-cN
-cN
-cQ
+bg
+ad
+ad
+ad
+ad
+cK
+ad
+ad
+ad
+ad
+bg
 ab
 ab
 ad
@@ -2314,13 +2182,13 @@ aB
 ab
 ab
 ab
-bf
+aY
 bn
 bn
 bF
-bP
-bP
-bZ
+bn
+bn
+bd
 ab
 ab
 ab
@@ -2343,19 +2211,19 @@ af
 af
 at
 af
-aG
-aG
-aG
-bg
+ab
+ab
+ab
+bP
 bo
 bw
 bQ
 bW
 bX
-bg
-aG
-aG
-aG
+cm
+ab
+ab
+ab
 af
 ct
 af
@@ -2375,19 +2243,19 @@ af
 ao
 au
 af
-aH
-cE
-aP
-bg
-bp
+ab
+ab
+ab
+bP
+bf
 bx
 bG
 bR
 ca
-bg
-aP
-cE
 cm
+ab
+ab
+ab
 af
 cu
 cB
@@ -2407,9 +2275,9 @@ af
 af
 av
 aC
-aI
-aQ
-aY
+cE
+cE
+cE
 bh
 bq
 by
@@ -2417,9 +2285,9 @@ bH
 bS
 ca
 bh
-aI
-ch
-aY
+cE
+cE
+cE
 aC
 cv
 af
@@ -2440,8 +2308,8 @@ af
 aw
 aD
 aJ
-aR
-aZ
+aQ
+aG
 bi
 br
 bz
@@ -2449,10 +2317,10 @@ bI
 bT
 cd
 bi
+aH
 cc
-ci
 aJ
-aD
+ci
 cw
 af
 aa
@@ -2472,17 +2340,17 @@ af
 ax
 aE
 aK
-aS
+aR
 ba
-bj
-bs
 bA
+bs
+cD
 bJ
 bU
 cG
 cH
 cI
-cJ
+ch
 cn
 aE
 cx
@@ -2504,7 +2372,7 @@ ae
 ae
 ae
 aL
-aT
+aS
 bb
 bi
 bt
@@ -2569,7 +2437,7 @@ az
 aF
 aN
 aV
-bd
+aZ
 bk
 bk
 bD

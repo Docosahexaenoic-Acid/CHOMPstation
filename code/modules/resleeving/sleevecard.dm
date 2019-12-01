@@ -4,6 +4,8 @@
 /obj/item/device/sleevecard
 	name = "sleevecard"
 	desc = "This KHI-upgraded pAI module has enough capacity to run a whole mind of human-level intelligence."
+	catalogue_data = list(/datum/category_item/catalogue/information/organization/khi,
+						/datum/category_item/catalogue/technology/resleeving)
 
 	icon = 'icons/obj/pda.dmi'
 	icon_state = "pai"
@@ -36,7 +38,7 @@
 	if(!isnull(infomorph))
 		infomorph.death(0)
 		infomorph = null
-	qdel_null(radio)
+	QDEL_NULL(radio)
 	return ..()
 
 /obj/item/device/sleevecard/attack_self(mob/user)

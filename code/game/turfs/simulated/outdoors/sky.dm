@@ -12,9 +12,9 @@
 	nitrogen = 0
 	phoron = 0
 
-/turf/simulated/sky/initialize()
+/turf/simulated/sky/Initialize()
 	. = ..()
-	outdoor_turfs.Add(src)
+	SSplanets.addTurf(src)
 	set_light(2, 2, "#FFFFFF")
 
 /turf/simulated/sky/north

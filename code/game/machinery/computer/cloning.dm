@@ -16,7 +16,7 @@
 	var/loading = 0 // Nice loading text
 
 
-/obj/machinery/computer/cloning/initialize()
+/obj/machinery/computer/cloning/Initialize()
 	. = ..()
 	updatemodules()
 
@@ -67,7 +67,7 @@
 			user.drop_item()
 			W.loc = src
 			diskette = W
-			user << "You insert [W]."
+			to_chat(user, "You insert [W].")
 			updateUsrDialog()
 			return
 	else if(istype(W, /obj/item/device/multitool))
@@ -77,7 +77,7 @@
 			pods += P
 			P.connected = src
 			P.name = "[initial(P.name)] #[pods.len]"
-			user << "<span class='notice'>You connect [P] to [src].</span>"
+			to_chat(user, "<span class='notice'>You connect [P] to [src].</span>")
 
 	else if (menu == 4 && (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda)))
 		if(check_access(W))
@@ -116,7 +116,7 @@
 
 	var/pods_list_ui[0]
 	for(var/obj/machinery/clonepod/pod in pods)
-		pods_list_ui[++pods_list_ui.len] = list("pod" = pod, "biomass" = pod.biomass)
+		pods_list_ui[++pods_list_ui.len] = list("pod" = pod, "biomass" = pod.get_biomass())
 
 	if(pods)
 		data["pods"] = pods_list_ui
@@ -146,7 +146,7 @@
 	data["diskette"] = diskette
 	data["temp"] = temp
 
-	ui = nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "cloning.tmpl", src.name, 400, 450)
 		ui.set_initial_data(data)
@@ -244,7 +244,7 @@
 		//Look for that player! They better be dead!
 		if(istype(C))
 			//Can't clone without someone to clone.  Or a pod.  Or if the pod is busy. Or full of gibs.
-			if(!pods.len)
+			if(!LAZYLEN(pods))
 				temp = "Error: No clone pods detected."
 			else
 				var/obj/machinery/clonepod/pod = pods[1]
@@ -252,13 +252,12 @@
 					pod = input(usr,"Select a cloning pod to use", "Pod selection") as anything in pods
 				if(pod.occupant)
 					temp = "Error: Clonepod is currently occupied."
-				else if(pod.biomass < CLONE_BIOMASS)
+				else if(pod.get_biomass() < CLONE_BIOMASS)
 					temp = "Error: Not enough biomass."
 				else if(pod.mess)
 					temp = "Error: Clonepod malfunction."
 				else if(!config.revival_cloning)
 					temp = "Error: Unable to initiate cloning cycle."
-
 				else if(pod.growclone(C))
 					temp = "Initiating cloning cycle..."
 					records.Remove(C)
@@ -285,7 +284,7 @@
 		temp = ""
 		scantemp = ""
 
-	nanomanager.update_uis(src)
+	SSnanoui.update_uis(src)
 	add_fingerprint(usr)
 
 /obj/machinery/computer/cloning/proc/scan_mob(mob/living/carbon/human/subject as mob)
@@ -336,6 +335,8 @@
 	R.name = R.dna.real_name
 	R.types = DNA2_BUF_UI|DNA2_BUF_UE|DNA2_BUF_SE
 	R.languages = subject.languages
+	R.gender = subject.gender
+	R.body_descriptors = subject.descriptors
 	if(!brain_skip) //Brains don't have flavor text.
 		R.flavor = subject.flavor_texts.Copy()
 	else

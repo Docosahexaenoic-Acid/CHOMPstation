@@ -1,11 +1,10 @@
-/mob/living/simple_animal/hostile/dino
+/mob/living/simple_mob/hostile/dino
 	name = "voracious lizard"
 	desc = "These gluttonous little bastards used to be regular lizards that were mutated by long-term exposure to phoron!"
 	icon = 'icons/mob/vore.dmi'
 	icon_dead = "dino-dead"
 	icon_living = "dino"
 	icon_state = "dino"
-	isEdible = 0
 
 	// By default, this is what most vore mobs are capable of.
 	response_help = "pets"
@@ -34,10 +33,10 @@
 	max_n2 = 0
 
 // Activate Noms!
-/mob/living/simple_animal/hostile/dino
+/mob/living/simple_mob/hostile/dino
 	vore_active = 1
 	swallowTime = 1 SECOND // Hungry little bastards.
 	vore_icons = SA_ICON_LIVING
 
-/mob/living/simple_animal/hostile/dino/virgo3b
+/mob/living/simple_mob/hostile/dino/virgo3b
 	faction = "virgo3b"

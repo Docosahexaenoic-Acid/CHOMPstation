@@ -1,11 +1,10 @@
-/mob/living/simple_animal/hostile/dragon
+/mob/living/simple_mob/hostile/dragon
 	name = "red dragon"
 	desc = "Here to pillage stations and kidnap princesses, and there probably aren't any princesses."
 	icon = 'icons/mob/vore64x64.dmi'
 	icon_dead = "reddragon-dead"
 	icon_living = "reddragon"
 	icon_state = "reddragon"
-	isEdible = 0
 
 	faction = "dragon"
 	maxHealth = 500 // Boss
@@ -31,32 +30,31 @@
 	pixel_x = -16
 	pixel_y = 0
 
-//CHOMPEDIT Just an easteregg on a mob that isnt really used but still.
-/mob/living/simple_animal/hostile/dragon/New()
-	..()
-	if(prob(1))//almost forgot this woops
-		name = "Slackwyrm" //Just an itty bitty easteregg dont mind me
-		desc = "A fierce dragon, well this one seems a bit more lazy. http://www.joshuawright.net/slack-wyrm-001.html" //
-		//Thanks to Josh Wright, the maker of slackwyrm for allowing this easteregg to exist.
+/mob/living/simple_mob/hostile/dragon/Process_Spacemove(var/check_drift = 0)
+	return 1	//No drifting in space for space dragons!
 
-		
-/mob/living/simple_animal/hostile/dragon/Process_Spacemove(var/check_drift = 0)
-	return 1 //No drifting in space for space dragons!
-
-/mob/living/simple_animal/hostile/dragon/FindTarget()
+/mob/living/simple_mob/hostile/dragon/FindTarget()
 	. = ..()
 	if(.)
 		custom_emote(1,"snaps at [.]")
 
 // Activate Noms!
-/mob/living/simple_animal/hostile/dragon
+/mob/living/simple_mob/hostile/dragon
 	vore_active = 1
 	vore_capacity = 2
 	vore_pounce_chance = 0 // Beat them into crit before eating.
 	vore_icons = SA_ICON_LIVING
 
-// Why a weaker subtype?
-///mob/living/simple_animal/hostile/dragon/virgo3b
-//	maxHealth = 200
-//	health = 200
-//	faction = "virgo3b"
+/mob/living/simple_mob/hostile/dragon/virgo3b
+	maxHealth = 200
+	health = 200
+	faction = "virgo3b"
+
+/mob/living/simple_animal/hostile/dragon/Login()
+	. = ..()
+	if(!riding_datum)
+		riding_datum = new /datum/riding/simple_animal(src)
+	verbs |= /mob/living/simple_animal/proc/animal_mount
+
+/mob/living/simple_animal/hostile/dragon/MouseDrop_T(mob/living/M, mob/living/user)
+	return

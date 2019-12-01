@@ -14,7 +14,7 @@
 	possible_transfer_amounts = list(5,10,15,25,30,60)
 	volume = 60
 	w_class = ITEMSIZE_SMALL
-	flags = OPENCONTAINER
+	flags = OPENCONTAINER | NOCONDUCT
 	unacidable = 1 //glass doesn't dissolve in acid
 
 	var/label_text = ""
@@ -37,19 +37,19 @@
 		/obj/machinery/iv_drip,
 		/obj/machinery/disease2/incubator,
 		/obj/machinery/disposal,
-		/mob/living/simple_animal/cow,
-		/mob/living/simple_animal/retaliate/goat,
+		/mob/living/simple_mob/animal/passive/cow,
+		/mob/living/simple_mob/animal/goat,
 		/obj/machinery/computer/centrifuge,
 		/obj/machinery/sleeper,
 		/obj/machinery/smartfridge/,
 		/obj/machinery/biogenerator,
 		/obj/structure/frame,
 		/obj/machinery/radiocarbon_spectrometer,
-		/obj/machinery/feeder
+		/obj/machinery/portable_atmospherics/powered/reagent_distillery
 		)
 
-/obj/item/weapon/reagent_containers/glass/New()
-	..()
+/obj/item/weapon/reagent_containers/glass/Initialize()
+	. = ..()
 	if(LAZYLEN(prefill))
 		for(var/R in prefill)
 			reagents.add_reagent(R,prefill[R])
@@ -132,12 +132,15 @@
 			update_name_label()
 	if(istype(W,/obj/item/weapon/storage/bag))
 		..()
+	if(W && W.w_class <= w_class && (flags & OPENCONTAINER))
+		to_chat(user, "<span class='notice'>You dip \the [W] into \the [src].</span>")
+		reagents.touch_obj(W, reagents.total_volume)
 
 /obj/item/weapon/reagent_containers/glass/proc/update_name_label()
 	if(label_text == "")
 		name = base_name
-	else if(length(label_text) > 10)
-		var/short_label_text = copytext(label_text, 1, 11)
+	else if(length(label_text) > 20)
+		var/short_label_text = copytext(label_text, 1, 21)
 		name = "[base_name] ([short_label_text]...)"
 	else
 		name = "[base_name] ([label_text])"
@@ -151,8 +154,8 @@
 	item_state = "beaker"
 	matter = list("glass" = 500)
 
-/obj/item/weapon/reagent_containers/glass/beaker/New()
-	..()
+/obj/item/weapon/reagent_containers/glass/beaker/Initialize()
+	. = ..()
 	desc += " Can hold up to [volume] units."
 
 /obj/item/weapon/reagent_containers/glass/beaker/on_reagent_change()
@@ -253,7 +256,7 @@
 	flags = OPENCONTAINER
 	unacidable = 0
 
-/obj/item/weapon/reagent_containers/glass/bucket/attackby(var/obj/D, mob/user as mob)
+/obj/item/weapon/reagent_containers/glass/bucket/attackby(var/obj/item/D, mob/user as mob)
 	if(isprox(D))
 		user << "You add [D] to [src]."
 		qdel(D)
@@ -261,7 +264,7 @@
 		user.drop_from_inventory(src)
 		qdel(src)
 		return
-	else if(istype(D, /obj/item/weapon/wirecutters))
+	else if(D.is_wirecutter())
 		to_chat(user, "<span class='notice'>You cut a big hole in \the [src] with \the [D].  It's kinda useless as a bucket now.</span>")
 		user.put_in_hands(new /obj/item/clothing/head/helmet/bucket)
 		user.drop_from_inventory(src)

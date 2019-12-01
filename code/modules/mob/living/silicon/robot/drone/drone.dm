@@ -19,7 +19,7 @@ var/list/mob_hat_cache = list()
 	return mob_hat_cache[key]
 
 /mob/living/silicon/robot/drone
-	name = "drone"
+	name = "maintenance drone"
 	real_name = "drone"
 	icon = 'icons/mob/robots.dmi'
 	icon_state = "repairbot"
@@ -57,23 +57,14 @@ var/list/mob_hat_cache = list()
 	var/obj/item/hat
 	var/hat_x_offset = 0
 	var/hat_y_offset = -13
+	var/serial_number = 0
+	var/name_override = 0
+
+	var/foreign_droid = FALSE
 
 	holder_type = /obj/item/weapon/holder/drone
 
 	can_be_antagged = FALSE
-	
-	//CHOMPEDIT: CHAISS storage
-	var/chassis = "repairbot"   // A record of your chosen chassis.
-	var/global/list/possible_chassis = list(
-		"Maintenance" = "repairbot",
-		"Mining" = "miningdrone",
-		"Construction" = "constructiondrone",
-		"White Spider" = "whitespider",
-		"Crawler" = "crawler",
-		"Gravekeeper" = "drone-gravekeeper",
-		"Egg" = "peaceborg",
-		"Ball" = "omoikane",
-		)
 
 /mob/living/silicon/robot/drone/Destroy()
 	if(hat)
@@ -84,24 +75,13 @@ var/list/mob_hat_cache = list()
 	return FALSE
 
 /mob/living/silicon/robot/drone/construction
+	name = "construction drone"
 	icon_state = "constructiondrone"
 	law_type = /datum/ai_laws/construction_drone
 	module_type = /obj/item/weapon/robot_module/drone/construction
 	hat_x_offset = 1
 	hat_y_offset = -12
 	can_pull_mobs = MOB_PULL_SAME
-	chassis = "constructiondrone" //CHOMPEDIT: Initial chasis
-	
-/mob/living/silicon/robot/drone/security
-	maxHealth = 100
-	health = 100
-	icon_state = "constructiondrone"
-	law_type = /datum/ai_laws/security_drone
-	module_type = /obj/item/weapon/robot_module/drone/security
-	hat_x_offset = 1
-	hat_y_offset = -12
-	can_pull_mobs = MOB_PULL_SAME
-	chassis = "constructiondrone" //CHOMPEDIT: Initial chasis
 
 /mob/living/silicon/robot/drone/mining
 	icon_state = "miningdrone"
@@ -111,18 +91,16 @@ var/list/mob_hat_cache = list()
 	hat_x_offset = 1
 	hat_y_offset = -12
 	can_pull_mobs = MOB_PULL_SAME
-	chassis = "mining" //CHOMPEDIT: Initial chasis
 
 /mob/living/silicon/robot/drone/New()
 
 	..()
 	verbs += /mob/living/proc/ventcrawl
 	verbs += /mob/living/proc/hide
-	verbs |= /mob/living/silicon/robot/drone/proc/choose_chassis //CHOMPEDIT verb addition
-	verbs -= /mob/living/silicon/robot/verb/self_diagnosis_verb //Drones dont take component based damage.
 	remove_language("Robot Talk")
 	add_language("Robot Talk", 0)
 	add_language("Drone Talk", 1)
+	serial_number = rand(0,999)
 
 	//They are unable to be upgraded, so let's give them a bit of a better battery.
 	cell.maxcharge = 10000
@@ -138,9 +116,11 @@ var/list/mob_hat_cache = list()
 
 	verbs -= /mob/living/silicon/robot/verb/Namepick
 	updateicon()
+	updatename()
 
 /mob/living/silicon/robot/drone/init()
-	aiCamera = new/obj/item/device/camera/siliconcam/drone_camera(src)
+	if(!scrambledcodes && !foreign_droid)
+		aiCamera = new/obj/item/device/camera/siliconcam/drone_camera(src)
 	additional_law_channels["Drone"] = ":d"
 	if(!laws) laws = new law_type
 	if(!module) module = new module_type(src)
@@ -155,20 +135,11 @@ var/list/mob_hat_cache = list()
 	name = real_name
 
 /mob/living/silicon/robot/drone/updatename()
-	real_name = "maintenance drone ([rand(100,999)])"
-	name = real_name
-/mob/living/silicon/robot/drone/mining/updatename()
-	real_name = "mining drone ([rand(100,999)])"
-	name = real_name
-/mob/living/silicon/robot/drone/security/updatename()
-	real_name = "security drone ([rand(100,999)])"
-	name = real_name
-/mob/living/silicon/robot/drone/construction/updatename()
-	real_name = "construction drone ([rand(100,999)])"
-	name = real_name
+	if(name_override)
+		return
 
-
-
+	real_name = "[initial(name)] ([serial_number])"
+	name = real_name
 
 /mob/living/silicon/robot/drone/updateicon()
 
@@ -208,7 +179,7 @@ var/list/mob_hat_cache = list()
 		to_chat(user, "<span class='danger'>\The [src] is not compatible with \the [W].</span>")
 		return
 
-	else if (istype(W, /obj/item/weapon/crowbar))
+	else if (W.is_crowbar())
 		to_chat(user, "<span class='danger'>\The [src] is hermetically sealed. You can't open the case.</span>")
 		return
 
@@ -253,15 +224,15 @@ var/list/mob_hat_cache = list()
 		return
 
 	if(emagged)
-		to_chat(user, "<span class='danger'>\The [user] attempts to load subversive software into you, but your hacked subroutines ignore the attempt.</span>")
+		to_chat(src, "<span class='danger'>\The [user] attempts to load subversive software into you, but your hacked subroutines ignore the attempt.</span>")
 		to_chat(user, "<span class='danger'>You attempt to subvert [src], but the sequencer has no effect.</span>")
 		return
 
 	to_chat(user, "<span class='danger'>You swipe the sequencer across [src]'s interface and watch its eyes flicker.</span>")
-	to_chat(user, "<span class='danger'>You feel a sudden burst of malware loaded into your execute-as-root buffer. Your tiny brain methodically parses, loads and executes the script.</span>")
 
-	message_admins("[key_name_admin(user)] emagged drone [key_name_admin(src)].  Laws overridden.")
-	log_game("[key_name(user)] emagged drone [key_name(src)].  Laws overridden.")
+	to_chat(src, "<span class='danger'>You feel a sudden burst of malware loaded into your execute-as-root buffer. Your tiny brain methodically parses, loads and executes the script.</span>")
+
+	log_game("[key_name(user)] emagged drone [key_name(src)]. Laws overridden.")
 	var/time = time2text(world.realtime,"hh:mm:ss")
 	lawchanges.Add("[time] <B>:</B> [user.name]([user.key]) emagged [name]([key])")
 
@@ -274,9 +245,9 @@ var/list/mob_hat_cache = list()
 	var/datum/gender/TU = gender_datums[user.get_visible_gender()]
 	set_zeroth_law("Only [user.real_name] and people [TU.he] designate[TU.s] as being such are operatives.")
 
-	src << "<b>Obey these laws:</b>"
+	to_chat(src, "<b>Obey these laws:</b>")
 	laws.show_laws(src)
-	src << "<span class='danger'>ALERT: [user.real_name] [TU.is] your new master. Obey your new laws and [TU.his] commands.</span>"
+	to_chat(src, "<span class='danger'>ALERT: [user.real_name] is your new master. Obey your new laws and \his commands.</span>")
 	return 1
 
 //DRONE LIFE/DEATH
@@ -284,10 +255,10 @@ var/list/mob_hat_cache = list()
 //For some goddamn reason robots have this hardcoded. Redefining it for our fragile friends here.
 /mob/living/silicon/robot/drone/updatehealth()
 	if(status_flags & GODMODE)
-		health = 35
+		health = maxHealth
 		stat = CONSCIOUS
 		return
-	health = 35 - (getBruteLoss() + getFireLoss())
+	health = maxHealth - (getBruteLoss() + getFireLoss())
 	return
 
 //Easiest to check this here, then check again in the robot proc.
@@ -308,20 +279,20 @@ var/list/mob_hat_cache = list()
 
 //CONSOLE PROCS
 /mob/living/silicon/robot/drone/proc/law_resync()
-	if(stat != 2)
+	if(stat != DEAD)
 		if(emagged)
-			src << "<span class='danger'>You feel something attempting to modify your programming, but your hacked subroutines are unaffected.</span>"
+			to_chat(src, "<span class='danger'>You feel something attempting to modify your programming, but your hacked subroutines are unaffected.</span>")
 		else
-			src << "<span class='danger'>A reset-to-factory directive packet filters through your data connection, and you obediently modify your programming to suit it.</span>"
+			to_chat(src, "<span class='danger'>A reset-to-factory directive packet filters through your data connection, and you obediently modify your programming to suit it.</span>")
 			full_law_reset()
 			show_laws()
 
 /mob/living/silicon/robot/drone/proc/shut_down()
-	if(stat != 2)
+	if(stat != DEAD)
 		if(emagged)
-			src << "<span class='danger'>You feel a system kill order percolate through your tiny brain, but it doesn't seem like a good idea to you.</span>"
+			to_chat(src, "<span class='danger'>You feel a system kill order percolate through your tiny brain, but it doesn't seem like a good idea to you.</span>")
 		else
-			src << "<span class='danger'>You feel a system kill order percolate through your tiny brain, and you obediently destroy yourself.</span>"
+			to_chat(src, "<span class='danger'>You feel a system kill order percolate through your tiny brain, and you obediently destroy yourself.</span>")
 			death()
 
 /mob/living/silicon/robot/drone/proc/full_law_reset()
@@ -343,7 +314,7 @@ var/list/mob_hat_cache = list()
 /mob/living/silicon/robot/drone/proc/question(var/client/C)
 	spawn(0)
 		if(!C || jobban_isbanned(C,"Cyborg"))	return
-		var/response = alert(C, "Someone is attempting to reboot a "+src+". Would you like to play as one?", src+" reboot", "Yes", "No", "Never for this round")
+		var/response = alert(C, "Someone is attempting to reboot a maintenance drone. Would you like to play as one?", "Maintenance drone reboot", "Yes", "No", "Never for this round")
 		if(!C || ckey)
 			return
 		if(response == "Yes")
@@ -361,15 +332,15 @@ var/list/mob_hat_cache = list()
 		player.mob.mind.transfer_to(src)
 
 	lawupdate = 0
-	src << "<b>Systems rebooted</b>. Loading base pattern maintenance protocol... <b>loaded</b>."
+	to_chat(src, "<b>Systems rebooted</b>. Loading base pattern maintenance protocol... <b>loaded</b>.")
 	full_law_reset()
 	welcome_drone()
 
 /mob/living/silicon/robot/drone/proc/welcome_drone()
-	src << "<b>You are a maintenance drone, an autonomous maintenance and fabrication system.</b>."
-	src << "You are assigned to a Sol Central maintenance project. The name is irrelevant. Your task is to complete maintenance and subsystem integration as soon as possible."
-	src << "Use <b>:d</b> to talk to other drones and <b>say</b> to speak silently to your nearby fellows."
-	src << "<b>You do not follow orders from anyone; not the AI, not humans, and not other synthetics.</b>."
+	to_chat(src, "<b>You are a maintenance drone, a tiny-brained robotic repair machine</b>.")
+	to_chat(src, "You have no individual will, no personality, and no drives or urges other than your laws.")
+	to_chat(src, "Remember,  you are <b>lawed against interference with the crew</b>. Also remember, <b>you DO NOT take orders from the AI.</b>")
+	to_chat(src, "Use <b>say ;Hello</b> to talk to other drones and <b>say Hello</b> to speak silently to your nearby fellows.")
 
 /mob/living/silicon/robot/drone/add_robot_verbs()
 	src.verbs |= silicon_subsystems
@@ -378,55 +349,15 @@ var/list/mob_hat_cache = list()
 	src.verbs -= silicon_subsystems
 
 /mob/living/silicon/robot/drone/construction/welcome_drone()
-	src << "<b>You are a construction drone, an autonomous engineering and fabrication system.</b>."
-	src << "You are assigned to a Sol Central construction project. The name is irrelevant. Your task is to complete construction and subsystem integration as soon as possible."
-	src << "Use <b>:d</b> to talk to other drones and <b>say</b> to speak silently to your nearby fellows."
-	src << "<b>You do not follow orders from anyone; not the AI, not humans, and not other synthetics.</b>."
-
-/mob/living/silicon/robot/drone/mining/welcome_drone()
-	src << "<b>You are a mining drone, an autonomous supply and mining system.</b>."
-	src << "You are assigned to a Sol Central mining project. The name is irrelevant. Your task is to complete construction and subsystem integration as soon as possible."
-	src << "Use <b>:d</b> to talk to other drones and <b>say</b> to speak silently to your nearby fellows."
-	src << "<b>You do not follow orders from anyone; not the AI, not humans, and not other synthetics.</b>."
-
-/mob/living/silicon/robot/drone/security/welcome_drone()
-	src << "<b>You are a security drone, an autonomous law enforcement system.</b>."
-	src << "You are assigned to a Sol Central security project. The name is irrelevant. Your task is to complete law enforcement and subsystem integration as soon as possible."
-	src << "Use <b>:d</b> to talk to other drones and <b>say</b> to speak silently to your nearby fellows."
-	src << "<b>You do not follow orders from anyone; not the AI, not humans, and not other synthetics. Except security.</b>."
+	to_chat(src, "<b>You are a construction drone, an autonomous engineering and fabrication system.</b>.")
+	to_chat(src, "You are assigned to a Sol Central construction project. The name is irrelevant. Your task is to complete construction and subsystem integration as soon as possible.")
+	to_chat(src, "Use <b>:d</b> to talk to other drones and <b>say</b> to speak silently to your nearby fellows.")
+	to_chat(src, "<b>You do not follow orders from anyone; not the AI, not humans, and not other synthetics.</b>.")
 
 /mob/living/silicon/robot/drone/construction/init()
 	..()
 	flavor_text = "It's a bulky construction drone stamped with a Sol Central glyph."
 
-/mob/living/silicon/robot/drone/construction/updatename()
-	real_name = "construction drone ([rand(100,999)])"
-	name = real_name
-
 /mob/living/silicon/robot/drone/mining/init()
 	..()
 	flavor_text = "It's a bulky mining drone stamped with a Grayson logo."
-
-/mob/living/silicon/robot/drone/mining/updatename()
-	real_name = "mining drone ([rand(100,999)])"
-	name = real_name
-
-//CHOMPEDIT: Porting pai chasis selector onto Drones
-
-/mob/living/silicon/robot/drone/proc/choose_chassis()
-	set category ="Robot Commands"
-	set name = "Choose Chassis"
-
-	var/choice
-	var/finalized = "No"
-	while(finalized == "No" && src.client)
-
-		choice = input(usr,"What would you like to use for your mobile chassis icon?") as null|anything in possible_chassis
-		if(!choice) return
-
-		icon_state = possible_chassis[choice]
-		finalized = alert("Look at your sprite. Is this what you wish to use?",,"No","Yes")
-
-	chassis = possible_chassis[choice]
-	verbs |= /mob/living/proc/hide
-

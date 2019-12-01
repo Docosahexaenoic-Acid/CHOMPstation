@@ -1,4 +1,4 @@
-/obj/item/weapon/storage/box/syndicate/initialize()
+/obj/item/weapon/storage/box/syndicate/Initialize()
 	switch (pickweight(list("bloodyspai" = 1, "stealth" = 1, "screwed" = 1, "guns" = 1, "murder" = 1, "freedom" = 1, "hacker" = 1, "lordsingulo" = 1, "smoothoperator" = 1)))
 		if("bloodyspai")
 			new /obj/item/clothing/under/chameleon(src)
@@ -70,7 +70,7 @@
 /obj/item/weapon/storage/box/syndie_kit/imp_freedom
 	name = "boxed freedom implant (with injector)"
 
-/obj/item/weapon/storage/box/syndie_kit/imp_freedom/initialize()
+/obj/item/weapon/storage/box/syndie_kit/imp_freedom/Initialize()
 	var/obj/item/weapon/implanter/O = new(src)
 	O.imp = new /obj/item/weapon/implant/freedom(O)
 	O.update()
@@ -87,11 +87,47 @@
 /obj/item/weapon/storage/box/syndie_kit/imp_uplink
 	name = "boxed uplink implant (with injector)"
 
-/obj/item/weapon/storage/box/syndie_kit/imp_uplink/initialize()
+/obj/item/weapon/storage/box/syndie_kit/imp_uplink/Initialize()
 	var/obj/item/weapon/implanter/O = new(src)
 	O.imp = new /obj/item/weapon/implant/uplink(O)
 	O.update()
 	. = ..()
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug
+	name = "boxed augment implant (with injector)"
+	var/case_type = /obj/item/weapon/implantcase/shades
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/Initialize()
+	new /obj/item/weapon/implanter(src)
+	new case_type(src)
+	. = ..()
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/taser
+	case_type = /obj/item/weapon/implantcase/taser
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/laser
+	case_type = /obj/item/weapon/implantcase/laser
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/dart
+	case_type = /obj/item/weapon/implantcase/dart
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/toolkit
+	case_type = /obj/item/weapon/implantcase/toolkit
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/medkit
+	case_type = /obj/item/weapon/implantcase/medkit
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/surge
+	case_type = /obj/item/weapon/implantcase/surge
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/analyzer
+	case_type = /obj/item/weapon/implantcase/analyzer
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/sword
+	case_type = /obj/item/weapon/implantcase/sword
+
+/obj/item/weapon/storage/box/syndie_kit/imp_aug/sprinter
+	case_type = /obj/item/weapon/implantcase/sprinter
 
 /obj/item/weapon/storage/box/syndie_kit/space
 	name = "boxed space suit and helmet"
@@ -157,7 +193,7 @@
 	name = "\improper Tricky smokes"
 	desc = "Comes with the following brands of cigarettes, in this order: 2xFlash, 2xSmoke, 1xMindBreaker, 1xTricordrazine. Avoid mixing them up."
 
-/obj/item/weapon/storage/box/syndie_kit/cigarette/initialize()
+/obj/item/weapon/storage/box/syndie_kit/cigarette/Initialize()
 	. = ..()
 	var/obj/item/weapon/storage/fancy/cigarettes/pack
 
@@ -223,19 +259,19 @@
 /obj/item/weapon/storage/box/syndie_kit/demolitions
 	starts_with = list(
 		/obj/item/weapon/syndie/c4explosive,
-		/obj/item/weapon/screwdriver
+		/obj/item/weapon/tool/screwdriver
 	)
 
 /obj/item/weapon/storage/box/syndie_kit/demolitions_heavy
 	starts_with = list(
 		/obj/item/weapon/syndie/c4explosive/heavy,
-		/obj/item/weapon/screwdriver
+		/obj/item/weapon/tool/screwdriver
 	)
 
 /obj/item/weapon/storage/box/syndie_kit/demolitions_super_heavy
 	starts_with = list(
 		/obj/item/weapon/syndie/c4explosive/heavy/super_heavy,
-		/obj/item/weapon/screwdriver
+		/obj/item/weapon/tool/screwdriver
 	)
 
 /obj/item/weapon/storage/secure/briefcase/rifle
@@ -253,8 +289,8 @@
 	description_fluff = "The container, upon opening, looks to have a few oddly shaped indentations in its packing."
 	description_antag = "This case will likely contain a charged fuel rod gun, and a few fuel rods to go with it. It can only hold the fuel rod gun, fuel rods, batteries, a screwdriver, and stock machine parts."
 	force = 12 //Anti-rad lined i.e. Lead, probably gonna hurt a bit if you get bashed with it.
-	can_hold = list(/obj/item/weapon/gun/magnetic/fuelrod, /obj/item/weapon/fuel_assembly, /obj/item/weapon/cell, /obj/item/weapon/stock_parts, /obj/item/weapon/screwdriver)
-	cant_hold = list(/obj/item/weapon/screwdriver/power)
+	can_hold = list(/obj/item/weapon/gun/magnetic/fuelrod, /obj/item/weapon/fuel_assembly, /obj/item/weapon/cell, /obj/item/weapon/stock_parts, /obj/item/weapon/tool/screwdriver)
+	cant_hold = list(/obj/item/weapon/tool/screwdriver/power)
 	starts_with = list(
 		/obj/item/weapon/gun/magnetic/fuelrod,
 		/obj/item/weapon/fuel_assembly/deuterium,
@@ -262,5 +298,5 @@
 		/obj/item/weapon/fuel_assembly/tritium,
 		/obj/item/weapon/fuel_assembly/tritium,
 		/obj/item/weapon/fuel_assembly/phoron,
-		/obj/item/weapon/screwdriver
+		/obj/item/weapon/tool/screwdriver
 	)

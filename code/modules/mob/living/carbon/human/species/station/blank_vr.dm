@@ -1,27 +1,32 @@
 
 /datum/species
 	//var/vore_numbing = 0
-	var/gets_food_nutrition = 1 // If this is set to 0, the person can't get nutrition from food.
+	var/gets_food_nutrition = TRUE // If this is set to 0, the person can't get nutrition from food.
 	var/metabolism = 0.0015
-	var/lightweight = 0 //Oof! Nonhelpful bump stumbles.
-	var/trashcan = 0 //It's always sunny in the wrestling ring.
+	var/lightweight = FALSE //Oof! Nonhelpful bump stumbles.
+	var/trashcan = FALSE //It's always sunny in the wrestling ring.
+	var/base_species = null // Unused outside of a few species
+	var/selects_bodytype = FALSE // Allows the species to choose from body types intead of being forced to be just one.
 
 /datum/species/custom
 	name = SPECIES_CUSTOM
 	name_plural = "Custom"
-	var/base_species = "Human"
+	selects_bodytype = TRUE
+	base_species = SPECIES_HUMAN
 
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 
 	blurb = "This is a custom species where you can assign various species traits to them as you wish, to \
 	create a (hopefully) balanced species. You will see the options to customize them on the VORE tab once \
 	you select and set this species as your species. Please look at the VORE tab if you select this species."
+	catalogue_data = list(/datum/category_item/catalogue/fauna/custom_species)
 
 	name_language = null // Use the first-name last-name generator rather than a language scrambler
 	min_age = 18
 	max_age = 200
 	health_hud_intensity = 2
 	num_alternate_languages = 3
+	assisted_langs = list(LANGUAGE_EAL, LANGUAGE_ROOTLOCAL, LANGUAGE_ROOTGLOBAL, LANGUAGE_VOX)
 
 	spawn_flags = SPECIES_CAN_JOIN
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_COLOR | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR

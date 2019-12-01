@@ -37,31 +37,33 @@
 			if("unitarianism")
 				B.name = "The Talmudic Quran"
 			if("christianity")
-				B.name = pick("The Holy Bible","The Dead Sea Scrolls")
-			if("Judaism")
+				B.name = "The Holy Bible"
+			if("judaism")
 				B.name = "The Torah"
-			if("satanism")
-				B.name = "The Satanic Bible"
-			if("cthulhu")
-				B.name = "The Necronomicon"
 			if("islam")
 				B.name = "Quran"
-			if("scientology")
-				B.name = pick("The Biography of L. Ron Hubbard","Dianetics")
-			if("chaos")
-				B.name = "The Book of Lorgar"
-			if("imperium")
-				B.name = "Uplifting Primer"
-			if("toolboxia")
-				B.name = "Toolbox Manifesto"
-			if("homosexuality")
-				B.name = "Guys Gone Wild"
-			if("science")
-				B.name = pick("Principle of Relativity", "Quantum Enigma: Physics Encounters Consciousness", "Programming the Universe", "Quantum Physics and Theology", "String Theory for Dummies", "How To: Build Your Own Warp Drive", "The Mysteries of Bluespace", "Playing God: Collector's Edition")
-			if("capitalism")
-				B.name = "Wealth of Nations"
-			if("communism")
-				B.name = "The Communist Manifesto"
+			if("buddhism")
+				B.name = "Tripitakas"
+			if("hinduism")
+				B.name = pick("The Srimad Bhagvatam", "The Four Vedas", "The Shiv Mahapuran", "Devi Mahatmya")
+			if("neopaganism")
+				B.name = "Neopagan Hymnbook"
+			if("phact shintoism")
+				B.name = "The Kojiki"
+			if("kishari national faith")
+				B.name = "The Scriptures of Kishar"
+			if("pleromanism")
+				B.name = "The Revised Talmudic Quran"
+			if("spectralism")
+				B.name = "The Book of the Spark"
+			if("hauler")
+				B.name = "Histories of Captaincy"
+			if("nock")
+				B.name = "The Book of the First"
+			if("singulitarian worship")
+				B.name = "The Book of the Precursors"
+			if("starlit path of angessa martei")
+				B.name = "Quotations of Exalted Martei"
 			else
 				B.name = "The Holy Book of [new_religion]"
 		feedback_set_details("religion_name","[new_religion]")
@@ -149,5 +151,7 @@
 		feedback_set_details("religion_book","[new_book_style]")
 	return 1
 
+/* If you uncomment this, every time the mob preview updates it makes a new PDA. It seems to work just fine and display without it, so why this exists, haven't a clue. -Hawk
 /datum/job/chaplain/equip_preview(var/mob/living/carbon/human/H, var/alt_title)
 	return equip(H, alt_title, FALSE)
+*/

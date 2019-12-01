@@ -10,12 +10,14 @@ GLOBAL_LIST_BOILERPLATE(all_mops, /obj/item/weapon/mop)
 	throw_speed = 5
 	throw_range = 10
 	w_class = ITEMSIZE_NORMAL
+	flags = NOCONDUCT
 	attack_verb = list("mopped", "bashed", "bludgeoned", "whacked")
 	var/mopping = 0
 	var/mopcount = 0
 
 /obj/item/weapon/mop/New()
 	create_reagents(30)
+	..()
 
 /obj/item/weapon/mop/afterattack(atom/A, mob/user, proximity)
 	if(!proximity) return

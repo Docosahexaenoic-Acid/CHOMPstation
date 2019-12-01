@@ -4,21 +4,23 @@
 	icon = 'icons/goonstation/objects/syringe_vr.dmi'
 	mode = SYRINGE_CAPPED //Override
 	var/used = FALSE
+	var/dirtiness = 0
 	var/list/targets
+	var/list/datum/disease2/disease/viruses
 
-/obj/item/weapon/reagent_containers/syringe/initialize()
+/obj/item/weapon/reagent_containers/syringe/Initialize()
 	. = ..()
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/Destroy()
-//	qdel_null_list(viruses)
+	QDEL_LIST_NULL(viruses)
 	LAZYCLEARLIST(targets)
 	return ..()
-/*
+
 /obj/item/weapon/reagent_containers/syringe/process()
 	dirtiness = min(dirtiness + targets.len,75)
 	if(dirtiness >= 75)
-		processing_objects -= src
+		STOP_PROCESSING(SSobj, src)
 	return 1
 
 /obj/item/weapon/reagent_containers/syringe/proc/dirty(var/mob/living/carbon/human/target, var/obj/item/organ/external/eo)
@@ -41,7 +43,11 @@
 
 	//Dirtiness should be very low if you're the first injectee. If you're spam-injecting 4 people in a row around you though,
 	//This gives the last one a 30% chance of infection.
-	if(prob(dirtiness+(targets.len-1)*10))
+	var/infect_chance = dirtiness        //Start with dirtiness
+	if(infect_chance <= 10 && (hash in targets)) //Extra fast uses on target is free
+		infect_chance = 0
+	infect_chance += (targets.len-1)*10    //Extra 10% per extra target
+	if(prob(infect_chance))
 		log_and_message_admins("[loc] infected [target]'s [eo.name] with \the [src].")
 		infect_limb(eo)
 
@@ -53,7 +59,7 @@
 			infect_virus2(target,virus.getcopy())
 
 	if(!used)
-		processing_objects |= src
+		START_PROCESSING(SSobj, src)
 
 /obj/item/weapon/reagent_containers/syringe/proc/infect_limb(var/obj/item/organ/external/eo)
 	src = null
@@ -62,7 +68,7 @@
 		var/obj/item/organ/external/found_limb = limb_ref.resolve()
 		if(istype(found_limb))
 			eo.germ_level += INFECTION_LEVEL_ONE+30
-*/
+
 //Allow for capped syringe mode
 /obj/item/weapon/reagent_containers/syringe/attack_self(mob/user as mob)
 	switch(mode)

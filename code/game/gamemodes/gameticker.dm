@@ -44,7 +44,7 @@ var/global/datum/controller/gameticker/ticker
 	'sound/music/title2.ogg',\
 	'sound/music/clouds.s3m',\
 	'sound/music/space_oddity.ogg') //Ground Control to Major Tom, this song is cool, what's going on?
-	*/
+	*/ //VOREStation Edit End
 
 	send2mainirc("Server lobby is loaded and open at byond://[config.serverurl ? config.serverurl : (config.server ? config.server : "[world.address]:[world.port]")]")
 
@@ -53,21 +53,17 @@ var/global/datum/controller/gameticker/ticker
 		to_chat(world, "<B><FONT color='#6F6FE2'>Welcome to the pregame lobby!</FONT></B>")
 		to_chat(world, "Please set up your character and select ready. The round will start in [pregame_timeleft] seconds.")
 		while(current_state == GAME_STATE_PREGAME)
-			for(var/i=0, i<10, i++)
-				sleep(1)
-				vote.process()
 			if(round_progressing)
 				pregame_timeleft--
 			if(pregame_timeleft == config.vote_autogamemode_timeleft)
-				if(!vote.time_remaining)
-					vote.autogamemode()	//Quit calling this over and over and over and over.
-					while(vote.time_remaining)
-						for(var/i=0, i<10, i++)
-							sleep(1)
-							vote.process()
+				if(!SSvote.time_remaining)
+					SSvote.autogamemode()	//Quit calling this over and over and over and over.
+					while(SSvote.time_remaining)
+						sleep(1)
 			if(pregame_timeleft <= 0)
 				current_state = GAME_STATE_SETTING_UP
 				Master.SetRunLevel(RUNLEVEL_SETUP)
+			sleep(10)
 	while (!setup())
 
 
@@ -105,7 +101,7 @@ var/global/datum/controller/gameticker/ticker
 	job_master.DivideOccupations() // Apparently important for new antagonist system to register specific job antags properly.
 
 	if(!src.mode.can_start())
-		world << "<B>Unable to start [mode.name].</B> Not enough players readied, [mode.required_players] players needed. Reverting to pregame lobby."
+		world << "<B>Unable to start [mode.name].</B> Not enough players readied, [config.player_requirements[mode.config_tag]] players needed. Reverting to pregame lobby."
 		current_state = GAME_STATE_PREGAME
 		Master.SetRunLevel(RUNLEVEL_LOBBY)
 		mode.fail_setup()
@@ -130,7 +126,7 @@ var/global/datum/controller/gameticker/ticker
 	create_characters() //Create player characters and transfer them.
 	collect_minds()
 	equip_characters()
-	data_core.manifest()
+	//data_core.manifest()	//VOREStation Removal
 
 	callHook("roundstart")
 
@@ -284,8 +280,13 @@ var/global/datum/controller/gameticker/ticker
 				else if(!player.mind.assigned_role)
 					continue
 				else
-					if (player.create_character()) // VOREStation Edit
+					//VOREStation Edit Start
+					var/mob/living/carbon/human/new_char = player.create_character()
+					if(new_char)
 						qdel(player)
+					if(istype(new_char) && !(new_char.mind.assigned_role=="Cyborg"))
+						data_core.manifest_inject(new_char)
+					//VOREStation Edit End
 
 
 	proc/collect_minds()
@@ -303,7 +304,7 @@ var/global/datum/controller/gameticker/ticker
 				if(!player_is_antag(player.mind, only_offstation_roles = 1))
 					job_master.EquipRank(player, player.mind.assigned_role, 0)
 					UpdateFactionList(player)
-					equip_custom_items(player)
+					//equip_custom_items(player)	//VOREStation Removal
 					//player.apply_traits() //VOREStation Removal
 		if(captainless)
 			for(var/mob/M in player_list)
@@ -311,7 +312,7 @@ var/global/datum/controller/gameticker/ticker
 					to_chat(M, "Colony Directorship not forced on anyone.")
 
 
-	proc/process()
+	process()
 		if(current_state != GAME_STATE_PLAYING)
 			return 0
 
@@ -377,7 +378,7 @@ var/global/datum/controller/gameticker/ticker
 				if(!round_end_announced) // Spam Prevention. Now it should announce only once.
 					to_chat(world, "<span class='danger'>The round has ended!</span>")
 					round_end_announced = 1
-				vote.autotransfer()
+				SSvote.autotransfer()
 
 		return 1
 
@@ -424,7 +425,7 @@ var/global/datum/controller/gameticker/ticker
 
 	for (var/mob/living/silicon/robot/robo in mob_list)
 
-		if(istype(robo,/mob/living/silicon/robot/drone))
+		if(istype(robo,/mob/living/silicon/robot/drone) && !istype(robo,/mob/living/silicon/robot/drone/swarm))
 			dronecount++
 			continue
 
@@ -443,7 +444,7 @@ var/global/datum/controller/gameticker/ticker
 	mode.declare_completion()//To declare normal completion.
 
 	//Ask the event manager to print round end information
-	event_manager.RoundEnd()
+	SSevents.RoundEnd()
 
 	//Print a list of antagonists to the server log
 	var/list/total_antagonists = list()

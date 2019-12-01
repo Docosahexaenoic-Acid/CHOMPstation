@@ -2,7 +2,7 @@
 /obj/structure/catwalk
 	name = "catwalk"
 	desc = "Cats really don't like these things."
-	plane = TURF_PLANE
+	plane = DECAL_PLANE
 	layer = ABOVE_UTILITY
 	icon = 'icons/turf/catwalks.dmi'
 	icon_state = "catwalk"
@@ -11,7 +11,7 @@
 	var/maxhealth = 100
 	anchored = 1.0
 
-/obj/structure/catwalk/initialize()
+/obj/structure/catwalk/Initialize()
 	. = ..()
 	for(var/obj/structure/catwalk/O in range(1))
 		O.update_icon()
@@ -67,7 +67,7 @@
 	return
 
 /obj/structure/catwalk/attackby(obj/item/C as obj, mob/user as mob)
-	if (istype(C, /obj/item/weapon/weldingtool))
+	if(istype(C, /obj/item/weapon/weldingtool))
 		var/obj/item/weapon/weldingtool/WT = C
 		if(WT.isOn())
 			if(WT.remove_fuel(0, user))
@@ -76,7 +76,7 @@
 				new /obj/item/stack/rods(src.loc)
 				new /obj/structure/lattice(src.loc)
 				qdel(src)
-	if(istype(C, /obj/item/weapon/screwdriver))
+	if(C.is_screwdriver())
 		if(health < maxhealth)
 			to_chat(user, "<span class='notice'>You begin repairing \the [src.name] with \the [C.name].</span>")
 			if(do_after(user, 20, src))
@@ -87,6 +87,12 @@
 	return ..()
 
 /obj/structure/catwalk/Crossed()
+	//VOREStation Edit begin: SHADEKIN
+	var/mob/SK = usr
+	if(istype(SK))
+		if(SK.shadekin_phasing_check())
+			return
+	//VOREStation Edit end: SHADEKIN
 	. = ..()
 	if(isliving(usr))
 		playsound(src, pick('sound/effects/footstep/catwalk1.ogg', 'sound/effects/footstep/catwalk2.ogg', 'sound/effects/footstep/catwalk3.ogg', 'sound/effects/footstep/catwalk4.ogg', 'sound/effects/footstep/catwalk5.ogg'), 25, 1)
@@ -98,7 +104,7 @@
 		return 0
 	return 1
 
-/obj/structure/catwalk/proc/take_damage(amount)
+/obj/structure/catwalk/take_damage(amount)
 	health -= amount
 	if(health <= 0)
 		visible_message("<span class='warning'>\The [src] breaks down!</span>")

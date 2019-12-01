@@ -41,6 +41,8 @@
 		/obj/item/weapon/storage/box/ids = 2,
 		/obj/item/weapon/gun/energy/gun,
 		/obj/item/weapon/gun/energy/gun/martin, //VOREStation Add,
+		/obj/item/weapon/storage/box/commandkeys, //VOREStation Add,
+		/obj/item/weapon/storage/box/servicekeys, //VOREStation Add,
 		///obj/item/weapon/gun/projectile/sec/flash, //VOREStation Removal,
 		/obj/item/device/flash)
 
@@ -106,12 +108,12 @@
 		/obj/item/weapon/storage/box/holobadge/hos,
 		/obj/item/clothing/accessory/badge/holo/hos,
 		/obj/item/weapon/reagent_containers/spray/pepper,
-		/obj/item/weapon/crowbar/red,
+		/obj/item/weapon/tool/crowbar/red,
 		/obj/item/weapon/storage/box/flashbangs,
 		/obj/item/weapon/storage/belt/security,
 		/obj/item/device/flash,
 		/obj/item/weapon/melee/baton/loaded,
-		/obj/item/weapon/gun/energy/gun,
+		/obj/item/weapon/gun/magnetic/railgun/heater/pistol/hos,
 		/obj/item/weapon/cell/device/weapon,
 		/obj/item/clothing/accessory/holster/waist,
 		/obj/item/weapon/melee/telebaton,
@@ -121,7 +123,7 @@
 		/obj/item/device/flashlight/maglight,
 		/obj/item/clothing/mask/gas/half)
 
-/obj/structure/closet/secure_closet/hos/initialize()
+/obj/structure/closet/secure_closet/hos/Initialize()
 	if(prob(50))
 		starts_with += /obj/item/weapon/storage/backpack/security
 	else
@@ -171,7 +173,7 @@
 		/obj/item/clothing/mask/gas/half,
 		/obj/item/clothing/gloves/warden) // Chompstation Edit
 
-/obj/structure/closet/secure_closet/warden/initialize()
+/obj/structure/closet/secure_closet/warden/Initialize()
 	if(prob(50))
 		starts_with += /obj/item/weapon/storage/backpack/security
 	else
@@ -215,31 +217,33 @@
 		/obj/item/clothing/shoes/boots/winter/security,
 		/obj/item/device/flashlight/maglight)
 
-/obj/structure/closet/secure_closet/security/initialize()
+/obj/structure/closet/secure_closet/security/Initialize()
 	if(prob(50))
 		starts_with += /obj/item/weapon/storage/backpack/security
 	else
 		starts_with += /obj/item/weapon/storage/backpack/satchel/sec
 	if(prob(50))
 		starts_with += /obj/item/weapon/storage/backpack/dufflebag/sec
+	if(prob(30))
+		starts_with += /obj/item/weapon/contraband/poster/nanotrasen
 	return ..()
 
-/obj/structure/closet/secure_closet/security/cargo/initialize()
+/obj/structure/closet/secure_closet/security/cargo/Initialize()
 	starts_with += /obj/item/clothing/accessory/armband/cargo
 	starts_with += /obj/item/device/encryptionkey/headset_cargo
 	return ..()
 
-/obj/structure/closet/secure_closet/security/engine/initialize()
+/obj/structure/closet/secure_closet/security/engine/Initialize()
 	starts_with += /obj/item/clothing/accessory/armband/engine
 	starts_with += /obj/item/device/encryptionkey/headset_eng
 	return ..()
 
-/obj/structure/closet/secure_closet/security/science/initialize()
+/obj/structure/closet/secure_closet/security/science/Initialize()
 	starts_with += /obj/item/clothing/accessory/armband/science
 	starts_with += /obj/item/device/encryptionkey/headset_sci
 	return ..()
 
-/obj/structure/closet/secure_closet/security/med/initialize()
+/obj/structure/closet/secure_closet/security/med/Initialize()
 	starts_with += /obj/item/clothing/accessory/armband/medblue
 	starts_with += /obj/item/device/encryptionkey/headset_med
 	return ..()
@@ -270,6 +274,7 @@
 		/obj/item/weapon/reagent_containers/food/drinks/flask/detflask,
 		/obj/item/weapon/storage/briefcase/crimekit,
 		/obj/item/device/taperecorder,
+		/obj/item/weapon/storage/bag/detective,
 		/obj/item/device/tape/random = 3)
 
 /obj/structure/closet/secure_closet/detective/update_icon()
@@ -301,9 +306,20 @@ GLOBAL_LIST_BOILERPLATE(all_brig_closets, /obj/structure/closet/secure_closet/br
 	var/id = null
 
 	starts_with = list(
-		/obj/item/clothing/under/color/orange,
+		/obj/item/clothing/under/color/prison,
 		/obj/item/clothing/shoes/orange)
 
+/obj/structure/closet/secure_closet/posters
+	name = "morale storage"
+	req_access = list(access_security)
+	anchored = 1
+
+	starts_with = list(
+		/obj/item/weapon/contraband/poster/nanotrasen,
+		/obj/item/weapon/contraband/poster/nanotrasen,
+		/obj/item/weapon/contraband/poster/nanotrasen,
+		/obj/item/weapon/contraband/poster/nanotrasen,
+		/obj/item/weapon/contraband/poster/nanotrasen)
 
 /obj/structure/closet/secure_closet/courtroom
 	name = "courtroom locker"

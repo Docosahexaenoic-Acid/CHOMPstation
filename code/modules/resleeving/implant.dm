@@ -7,6 +7,8 @@
 /obj/item/weapon/implant/backup
 	name = "backup implant"
 	desc = "A mindstate backup implant that occasionally stores a copy of one's mind on a central server for backup purposes."
+	catalogue_data = list(/datum/category_item/catalogue/information/organization/khi,
+						/datum/category_item/catalogue/technology/resleeving)
 	icon = 'icons/vore/custom_items_vr.dmi'
 	icon_state = "backup_implant"
 
@@ -27,13 +29,9 @@
 	SStranscore.implants -= src
 	return ..()
 
-/obj/item/weapon/implant/backup/implanted(var/mob/living/carbon/human/H)
-	..()
+/obj/item/weapon/implant/backup/post_implant(var/mob/living/carbon/human/H)
 	if(istype(H))
-		var/obj/item/weapon/implant/backup/other_imp = locate(/obj/item/weapon/implant/backup,H)
-		if(other_imp && other_imp.imp_in == H)
-			qdel(other_imp) //implant fight
-
+		BITSET(H.hud_updateflag, BACKUP_HUD)
 		SStranscore.implants |= src
 
 		return 1
@@ -42,6 +40,8 @@
 /obj/item/weapon/backup_implanter
 	name = "backup implanter"
 	desc = "After discovering that Nanotrasen was just re-using the same implanters over and over again on organics, leading to cross-contamination, Kitsuhana Heavy industries designed this self-cleaning model. Holds four backup implants at a time."
+	catalogue_data = list(/datum/category_item/catalogue/information/organization/khi,
+						/datum/category_item/catalogue/technology/resleeving)
 	icon = 'icons/obj/device_alt.dmi'
 	icon_state = "bimplant"
 	item_state = "syringe_0"
@@ -95,9 +95,6 @@
 /obj/item/weapon/backup_implanter/attack(mob/M as mob, mob/user as mob)
 	if (!istype(M, /mob/living/carbon))
 		return
-	var/mob/living/carbon/implantee = M//CHOMPEDIT implant check
-	if (implantee.hasImplant)
-		return
 	if (user && imps.len)
 		M.visible_message("<span class='notice'>[user] is injecting a backup implant into [M].</span>")
 
@@ -110,19 +107,10 @@
 				M.visible_message("<span class='notice'>[M] has been backup implanted by [user].</span>")
 
 				var/obj/item/weapon/implant/backup/imp = imps[imps.len]
-				if(imp.implanted(M))
-					implantee.hasImplant = 1 //CHOMPEDIT Chanigng our hasimplant var to 1 to symbolize we were backed up
-					imp.forceMove(M)
+				if(imp.handle_implant(M,user.zone_sel.selecting))
+					imp.post_implant(M)
 					imps -= imp
-					imp.imp_in = M
-					imp.implanted = 1
 					add_attack_logs(user,M,"Implanted backup implant")
-					if (ishuman(M))
-						var/mob/living/carbon/human/H = M
-						var/obj/item/organ/external/affected = H.get_organ(user.zone_sel.selecting)
-						affected.implants += imp
-						imp.part = affected
-						BITSET(H.hud_updateflag, BACKUP_HUD)
 
 				update()
 

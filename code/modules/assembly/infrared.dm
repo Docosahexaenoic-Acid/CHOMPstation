@@ -25,11 +25,11 @@
 /obj/item/device/assembly/infra/toggle_secure()
 	secured = !secured
 	if(secured)
-		processing_objects.Add(src)
+		START_PROCESSING(SSobj, src)
 	else
 		on = 0
 		if(first)	qdel(first)
-		processing_objects.Remove(src)
+		STOP_PROCESSING(SSobj, src)
 	update_icon()
 	return secured
 
@@ -142,12 +142,12 @@
 	return
 
 
-/obj/item/device/assembly/infra/verb/rotate()//This could likely be better
-	set name = "Rotate Infrared Laser"
+/obj/item/device/assembly/infra/verb/rotate_clockwise()
+	set name = "Rotate Infrared Laser Clockwise"
 	set category = "Object"
 	set src in usr
 
-	set_dir(turn(dir, 90))
+	src.set_dir(turn(src.dir, 270))
 	return
 
 
@@ -242,6 +242,12 @@
 	return
 
 /obj/effect/beam/i_beam/Crossed(atom/movable/AM as mob|obj)
+	//VOREStation Edit begin: SHADEKIN
+	var/mob/SK = AM
+	if(istype(SK))
+		if(SK.shadekin_phasing_check())
+			return
+	//VOREStation Edit end: SHADEKIN
 	if(istype(AM, /obj/effect/beam))
 		return
 	spawn(0)
@@ -250,9 +256,8 @@
 	return
 
 /obj/effect/beam/i_beam/Destroy()
+	. = ..()
 	if(master.first == src)
 		master.first = null
-	if(next)
-		qdel(next)
-		next = null
-	..()
+	if(next && !next.gc_destroyed)
+		QDEL_NULL(next)

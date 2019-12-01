@@ -5,11 +5,8 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "suitcooler0"
 	slot_flags = SLOT_BACK
-	
-	var/emagged = 0 //CHOMPEDIT Cooling suit emagging
-	
+
 	//copied from tank.dm
-	flags = CONDUCT
 	force = 5.0
 	throwforce = 10.0
 	throw_speed = 1
@@ -32,14 +29,11 @@
 	toggle(usr)
 
 /obj/item/device/suit_cooling_unit/New()
-	processing_objects |= src
+	START_PROCESSING(SSobj, src)
 	cell = new/obj/item/weapon/cell/high()	//comes not with the crappy default power cell - because this is dedicated EVA equipment
 	cell.loc = src
 
 /obj/item/device/suit_cooling_unit/process()
-	if (emagged)
-		emagprocess() //CHOMPEDIT Should be good enough to override natural process
-		return
 	if (!on || !cell)
 		return
 
@@ -51,7 +45,9 @@
 
 	var/mob/living/carbon/human/H = loc
 
-	var/efficiency = 1 - H.get_pressure_weakness()			// You need to have a good seal for effective cooling
+	var/turf/T = get_turf(src)
+	var/datum/gas_mixture/environment = T.return_air()
+	var/efficiency = 1 - H.get_pressure_weakness(environment.return_pressure())	// You need to have a good seal for effective cooling
 	var/temp_adj = 0										// How much the unit cools you. Adjusted later on.
 	var/env_temp = get_environment_temperature()			// This won't save you from a fire
 	var/thermal_protection = H.get_heat_protection(env_temp)	// ... unless you've got a good suit.
@@ -127,7 +123,7 @@
 		cell.add_fingerprint(user)
 		cell.update_icon()
 
-		user << "You remove \the [src.cell]."
+		to_chat(user, "You remove \the [src.cell].")
 		src.cell = null
 		updateicon()
 		return
@@ -139,16 +135,16 @@
 		turn_off()
 	else
 		turn_on()
-	user << "<span class='notice'>You switch \the [src] [on ? "on" : "off"].</span>"
+	to_chat(user, "<span class='notice'>You switch \the [src] [on ? "on" : "off"].</span>")
 
 /obj/item/device/suit_cooling_unit/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/screwdriver))
+	if (W.is_screwdriver())
 		if(cover_open)
 			cover_open = 0
-			user << "You screw the panel into place."
+			to_chat(user, "You screw the panel into place.")
 		else
 			cover_open = 1
-			user << "You unscrew the panel."
+			to_chat(user, "You unscrew the panel.")
 		playsound(src, W.usesound, 50, 1)
 		updateicon()
 		return
@@ -156,12 +152,12 @@
 	if (istype(W, /obj/item/weapon/cell))
 		if(cover_open)
 			if(cell)
-				user << "There is a [cell] already installed here."
+				to_chat(user, "There is a [cell] already installed here.")
 			else
 				user.drop_item()
 				W.loc = src
 				cell = W
-				user << "You insert the [cell]."
+				to_chat(user, "You insert the [cell].")
 		updateicon()
 		return
 
@@ -182,107 +178,19 @@
 
 	if (on)
 		if (attached_to_suit(src.loc))
-			user << "It's switched on and running."
+			to_chat(user, "It's switched on and running.")
 		else
-			user << "It's switched on, but not attached to anything."
+			to_chat(user, "It's switched on, but not attached to anything.")
 	else
-		user << "It is switched off."
+		to_chat(user, "It is switched off.")
 
 	if (cover_open)
 		if(cell)
-			user << "The panel is open, exposing the [cell]."
+			to_chat(user, "The panel is open, exposing the [cell].")
 		else
-			user << "The panel is open."
+			to_chat(user, "The panel is open.")
 
 	if (cell)
-		user << "The charge meter reads [round(cell.percent())]%."
+		to_chat(user, "The charge meter reads [round(cell.percent())]%.")
 	else
-		user << "It doesn't have a power cell installed."
-
-//CHOMPEDIT hey you wanna go out into space here i got you a spacesuit, even got a cooling module :) trust me friend.
-//Tampered Cooling unit, or also "Heating unit" 
-/obj/item/device/suit_cooling_unit/tampered
-	name = "modified portable suit cooling unit"
-	origin_tech = list(TECH_MAGNET = 4, TECH_MATERIAL = 4)
-	max_cooling = 10 
-	thermostat = T20C 
-	desc = "A portable heat sink and liquid cooled radiator that can be hooked up to a space suit's existing temperature controls to provide industrial levels of cooling. This ones panel seems a bit loose and wires are hanging out."
-
-/obj/item/device/suit_cooling_unit/tampered/process()
-	emagprocess()
-
-/obj/item/device/suit_cooling_unit/proc/emagprocess()
-	if (!on || !cell)
-		return
-
-	if (!ismob(loc))
-		return
-
-	if (!attached_to_suit(loc))		//make sure they have a suit and we are attached to it
-		return
-
-	var/mob/living/carbon/human/H = loc
-
-	var/efficiency = 1 - H.get_pressure_weakness()			// You need to have a good seal for effective "cooling"
-	var/temp_adj = 0						// How much the unit heats you. Adjusted later on.
-	var/env_temp = get_environment_temperature()			// This won't save you from a fire, yup
-	var/thermal_protection = H.get_heat_protection(env_temp)	// ... unless you've got a good suit. not even then
-
-	if(thermal_protection < 0.99)		//For some reason, < 1 returns false if the value is 1.
-		temp_adj = min(H.bodytemperature - max(thermostat, env_temp), max_cooling)
-	else
-		temp_adj = min(H.bodytemperature - thermostat, max_cooling)
-
-	//if (temp_adj < 0.5)	//no safety
-	//	return
-
-	var/charge_usage = (temp_adj/max_cooling)*charge_consumption
-
-	H.bodytemperature += temp_adj*efficiency //plus instead of minus
-
-	cell.use(charge_usage)
-
-	if(cell.charge <= 0)
-		turn_off(1)
-
-//CHOMPEDIT Let's go rogue bb
-/obj/item/device/suit_cooling_unit/emag_act(var/remaining_charges, var/mob/user)
-	if(!emagged)
-		user << "<span class='danger'>You stealthily swipe the cryptographic sequencer through \the [src].</span>"
-		playsound(src, "sparks", 50, 1)
-		emagged = 1
-		if (!on)
-			on = 1 //automatically turns it on
-
-
-/mob/living/simple_animal/hostile/jelly/cold //you are my test mob now fug you
-	hostile=0
-	retaliate=1
-	name = "Frostbite Jelly"
-	//might make a blue icon someday, not priority this is debug stuff
-	var/cooling = -500	//variable cooling
-	var/isCooling = 1
-	cold_damage_per_tick = 0
-	maxbodytemp = 2000
-
-/mob/living/simple_animal/hostile/jelly/cold/proc/toggle_cooling()	
-	isCooling=!isCooling
-
-/mob/living/simple_animal/hostile/jelly/cold/proc/handle_cooling(var/datum/gas_mixture/environment)
-	var/datum/gas_mixture/gas
-	gas = environment.remove(0.5 * environment.total_moles)
-	if(gas)
-		gas.add_thermal_energy(cooling)
-	environment.merge(gas)
-
-/mob/living/simple_animal/hostile/jelly/cold/Life()
-	..()
-	var/datum/gas_mixture/environment = src.loc.return_air()
-	if(icon_state != icon_dead &&  isCooling)
-		handle_cooling(environment)
-		src.bodytemperature += cooling
-	if(src.bodytemperature<=-500)
-		isCooling = 0
-	if(src.bodytemperature>=-499)
-		isCooling = 1
-//This thing is basically a cooling unit and could be used for the engine, I mean what
+		to_chat(user, "It doesn't have a power cell installed.")

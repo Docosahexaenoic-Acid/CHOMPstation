@@ -1,6 +1,38 @@
 // These should all be procs, you can add them to humans/subspecies by
 // species.dm's inherent_verbs ~ Z
 
+/mob/living/carbon/human/proc/tie_hair()
+	set name = "Tie Hair"
+	set desc = "Style your hair."
+	set category = "IC"
+
+	if(incapacitated())
+		to_chat(src, "<span class='warning'>You can't mess with your hair right now!</span>")
+		return
+
+	if(h_style)
+		var/datum/sprite_accessory/hair/hair_style = hair_styles_list[h_style]
+		var/selected_string
+		if(!(hair_style.flags & HAIR_TIEABLE))
+			to_chat(src, "<span class ='warning'>Your hair isn't long enough to tie.</span>")
+			return
+		else
+			var/list/datum/sprite_accessory/hair/valid_hairstyles = list()
+			for(var/hair_string in hair_styles_list)
+				var/list/datum/sprite_accessory/hair/test = hair_styles_list[hair_string]
+				if(test.flags & HAIR_TIEABLE)
+					valid_hairstyles.Add(hair_string)
+			selected_string = input("Select a new hairstyle", "Your hairstyle", hair_style) as null|anything in valid_hairstyles
+		if(incapacitated())
+			to_chat(src, "<span class='warning'>You can't mess with your hair right now!</span>")
+			return
+		else if(selected_string && h_style != selected_string)
+			h_style = selected_string
+			regenerate_icons()
+			visible_message("<span class='notice'>[src] pauses a moment to style their hair.</span>")
+		else
+			to_chat(src, "<span class ='notice'>You're already using that style.</span>")
+
 /mob/living/carbon/human/proc/tackle()
 	set category = "Abilities"
 	set name = "Tackle"
@@ -10,7 +42,7 @@
 		return
 
 	if(stat || paralysis || stunned || weakened || lying || restrained() || buckled)
-		src << "You cannot tackle someone in your current state."
+		to_chat(src, "You cannot tackle someone in your current state.")
 		return
 
 	var/list/choices = list()
@@ -29,7 +61,7 @@
 		return
 
 	if(stat || paralysis || stunned || weakened || lying || restrained() || buckled)
-		src << "You cannot tackle in your current state."
+		to_chat(src, "You cannot tackle in your current state.")
 		return
 
 	last_special = world.time + 50
@@ -71,7 +103,7 @@
 	var/mob/M = targets[target]
 
 	if(istype(M, /mob/observer/dead) || M.stat == DEAD)
-		src << "Not even a [src.species.name] can speak to the dead."
+		to_chat(src, "Not even a [src.species.name] can speak to the dead.")
 		return
 
 	log_say("(COMMUNE to [key_name(M)]) [text]",src)
@@ -106,7 +138,7 @@
 	if(msg)
 		log_say("(PWHISPER to [key_name(M)]) [msg]", src)
 		M << "<font color='green'>You hear a strange, alien voice in your head... <i>[msg]</i></font>"
-		src << "<font color='green'>You said: \"[msg]\" to [M]</font>"
+		to_chat(src, "<font color='green'>You said: \"[msg]\" to [M]</font>")
 	return
 
 /mob/living/carbon/human/proc/diona_split_nymph()
@@ -157,7 +189,7 @@
 
 	if(stat == DEAD) return
 
-	src << "<span class='notice'>Performing self-diagnostic, please wait...</span>"
+	to_chat(src, "<span class='notice'>Performing self-diagnostic, please wait...</span>")
 	sleep(50)
 	var/output = "<span class='notice'>Self-Diagnostic Results:\n</span>"
 
@@ -194,17 +226,17 @@
 	set category = "Abilities"
 
 	if(incapacitated())
-		src << "<span class='warning'>You need to recover before you can use this ability.</span>"
+		to_chat(src, "<span class='warning'>You need to recover before you can use this ability.</span>")
 		return
 	if(world.time < next_sonar_ping)
-		src << "<span class='warning'>You need another moment to focus.</span>"
+		to_chat(src, "<span class='warning'>You need another moment to focus.</span>")
 		return
 	if(is_deaf() || is_below_sound_pressure(get_turf(src)))
-		src << "<span class='warning'>You are for all intents and purposes currently deaf!</span>"
+		to_chat(src, "<span class='warning'>You are for all intents and purposes currently deaf!</span>")
 		return
 	next_sonar_ping += 10 SECONDS
 	var/heard_something = FALSE
-	src << "<span class='notice'>You take a moment to listen in to your environment...</span>"
+	to_chat(src, "<span class='notice'>You take a moment to listen in to your environment...</span>")
 	for(var/mob/living/L in range(client.view, src))
 		var/turf/T = get_turf(L)
 		if(!T || L == src || L.stat == DEAD || is_below_sound_pressure(T))
@@ -231,7 +263,7 @@
 		feedback += "</span>"
 		src << jointext(feedback,null)
 	if(!heard_something)
-		src << "<span class='notice'>You hear no movement but your own.</span>"
+		to_chat(src, "<span class='notice'>You hear no movement but your own.</span>")
 
 /mob/living/carbon/human/proc/regenerate()
 	set name = "Regenerate"
@@ -254,13 +286,17 @@
 		nutrition -= 200
 
 		for(var/obj/item/organ/I in internal_organs)
+			if(I.robotic >= ORGAN_ROBOT) // No free robofix.
+				continue
 			if(I.damage > 0)
 				I.damage = max(I.damage - 30, 0) //Repair functionally half of a dead internal organ.
+				I.status = 0	// Wipe status, as it's being regenerated from possibly dead.
 				to_chat(src, "<span class='notice'>You feel a soothing sensation within your [I.name]...</span>")
 
 		// Replace completely missing limbs.
 		for(var/limb_type in src.species.has_limbs)
 			var/obj/item/organ/external/E = src.organs_by_name[limb_type]
+
 			if(E && E.disfigured)
 				E.disfigured = 0
 			if(E && (E.is_stump() || (E.status & (ORGAN_DESTROYED|ORGAN_DEAD|ORGAN_MUTATED))))
@@ -273,6 +309,19 @@
 				var/obj/item/organ/O = new limb_path(src)
 				organ_data["descriptor"] = O.name
 				to_chat(src, "<span class='notice'>You feel a slithering sensation as your [O.name] reform.</span>")
+
+				var/agony_to_apply = round(0.66 * O.max_damage) // 66% of the limb's health is converted into pain.
+				src.apply_damage(agony_to_apply, HALLOSS)
+
+		for(var/organtype in species.has_organ) // Replace completely missing internal organs. -After- external ones, so they all should exist.
+			if(!src.internal_organs_by_name[organtype])
+				var/organpath = species.has_organ[organtype]
+				var/obj/item/organ/Int = new organpath(src, TRUE)
+
+				Int.rejuvenate(TRUE)
+
+		handle_organs() // Update everything
+
 		update_icons_body()
 		active_regen = FALSE
 	else

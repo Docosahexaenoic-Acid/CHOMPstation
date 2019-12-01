@@ -1,8 +1,8 @@
-/mob/living/simple_animal/mouse
+/mob/living/simple_mob/mouse
 	name = "mouse"
 	real_name = "mouse"
 	desc = "It's a small rodent."
-	tt_desc = "Mus musculus"
+	tt_desc = "E Mus musculus"
 	icon_state = "mouse_gray"
 	item_state = "mouse_gray"
 	icon_living = "mouse_gray"
@@ -16,10 +16,10 @@
 	see_in_dark = 6
 	universal_understand = 1
 
-	mob_size = MOB_MINISCULE
+	mob_size = MOB_SMALL
 	pass_flags = PASSTABLE
-	can_pull_size = ITEMSIZE_TINY
-	can_pull_mobs = MOB_PULL_NONE
+//	can_pull_size = ITEMSIZE_TINY
+//	can_pull_mobs = MOB_PULL_NONE
 	layer = MOB_LAYER
 	density = 0
 
@@ -42,9 +42,8 @@
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
 
 	var/body_color //brown, gray and white, leave blank for random
-	var/amount_grown = 0
-	
-/mob/living/simple_animal/mouse/Life()
+
+/mob/living/simple_mob/mouse/Life()
 	. = ..()
 	if(!. || ai_inactive) return
 
@@ -64,7 +63,7 @@
 		else if(prob(1))
 			audible_emote("snuffles.")
 
-/mob/living/simple_animal/mouse/New()
+/mob/living/simple_mob/mouse/New()
 	..()
 
 	verbs += /mob/living/proc/ventcrawl
@@ -83,7 +82,7 @@
 	icon_rest = "mouse_[body_color]_sleep"
 	desc = "A small [body_color] rodent, often seen hiding in maintenance areas and making a nuisance of itself."
 
-/mob/living/simple_animal/mouse/proc/splat()
+/mob/living/simple_mob/mouse/proc/splat()
 	src.health = 0
 	src.stat = DEAD
 	src.icon_dead = "mouse_[body_color]_splat"
@@ -93,15 +92,15 @@
 		client.time_died_as_mouse = world.time
 
 
-/mob/living/simple_animal/mouse/Crossed(AM as mob|obj)
+/mob/living/simple_mob/mouse/Crossed(AM as mob|obj)
 	if( ishuman(AM) )
 		if(!stat)
 			var/mob/M = AM
-			M.visible_message("<font color='#6F6FE2'>\icon[src] Squeek!</font>")
+			M.visible_message("<font color='blue'>\icon[src] Squeek!</font>")
 			M << 'sound/effects/mouse_squeak.ogg'
 	..()
 
-/mob/living/simple_animal/mouse/death()
+/mob/living/simple_mob/mouse/death()
 	layer = MOB_LAYER
 	playsound(src, 'sound/effects/mouse_squeak_loud.ogg', 35, 1)
 	if(client)
@@ -112,67 +111,27 @@
  * Mouse types
  */
 
-/mob/living/simple_animal/mouse/white
+/mob/living/simple_mob/mouse/white
 	body_color = "white"
 	icon_state = "mouse_white"
 
-/mob/living/simple_animal/mouse/gray
+/mob/living/simple_mob/mouse/gray
 	body_color = "gray"
 	icon_state = "mouse_gray"
 
-/mob/living/simple_animal/mouse/brown
+/mob/living/simple_mob/mouse/brown
 	body_color = "brown"
 	icon_state = "mouse_brown"
 
 //TOM IS ALIVE! SQUEEEEEEEE~K :)
-/mob/living/simple_animal/mouse/brown/Tom
+/mob/living/simple_mob/mouse/brown/Tom
 	name = "Tom"
 	desc = "Jerry the cat is not amused."
 
-/mob/living/simple_animal/mouse/brown/Tom/New()
+/mob/living/simple_mob/mouse/brown/Tom/New()
 	..()
 	// Change my name back, don't want to be named Tom (666)
 	name = initial(name)
 
-/mob/living/simple_animal/mouse/cannot_use_vents()
+/mob/living/simple_mob/mouse/cannot_use_vents()
 	return
-
-	
-	
-	
-	
-
-//EVENT mice that evolve into rats because exctement.
-/mob/living/simple_animal/mouse/event
-	desc = "This one looks like it is growing huge!"
-	
-/mob/living/simple_animal/mouse/event/Life()
-	. = ..()
-	if(amount_grown >= 0)
-		amount_grown += rand(0,2)
-	if(amount_grown >= 100 && icon_state != icon_dead)
-		rat()
-		return
-
-/mob/living/simple_animal/mouse/event/proc/rat()
-	visible_message("<span class='warning'>\The [src] suddenly evolves!</span>")
-	if(prob(99.5))
-		new /mob/living/simple_animal/hostile/rat/event(get_turf(src))
-		qdel(src)
-	else	
-		new /mob/living/simple_animal/hostile/chungus(get_turf(src))
-		qdel(src)
-		
-
-	
-	
-	
-
-/mob/living/simple_animal/mouse/white/event
-
-
-/mob/living/simple_animal/mouse/gray/event
-
-
-/mob/living/simple_animal/mouse/brown/event
-

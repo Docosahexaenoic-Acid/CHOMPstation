@@ -1,5 +1,5 @@
 
-/datum/supply_packs/misc/beltminer
+/datum/supply_pack/misc/beltminer
 	name = "Belt-miner gear crate"
 	contains = list(
 			/obj/item/weapon/gun/energy/particle = 2,
@@ -13,7 +13,7 @@
 	containername = "Belt-miner gear crate"
 	access = access_mining
 
-/datum/supply_packs/misc/eva_rig
+/datum/supply_pack/misc/eva_rig
 	name = "eva hardsuit (empty)"
 	contains = list(
 			/obj/item/weapon/rig/eva = 1
@@ -21,9 +21,13 @@
 	cost = 150
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "eva hardsuit crate"
-	access = access_mining
+	access = list(access_mining,
+				  access_eva,
+				  access_explorer,
+				  access_pilot)
+	one_access = TRUE
 
-/datum/supply_packs/misc/mining_rig
+/datum/supply_pack/misc/mining_rig
 	name = "industrial hardsuit (empty)"
 	contains = list(
 			/obj/item/weapon/rig/industrial = 1
@@ -31,4 +35,46 @@
 	cost = 150
 	containertype = /obj/structure/closet/crate/secure/gear
 	containername = "industrial hardsuit crate"
-	access = access_mining
+	access = list(access_mining,
+				  access_eva)
+	one_access = TRUE
+
+/datum/supply_pack/misc/medical_rig
+	name = "medical hardsuit (empty)"
+	contains = list(
+			/obj/item/weapon/rig/medical = 1
+			)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/gear
+	containername = "medical hardsuit crate"
+	access = access_medical
+
+/datum/supply_pack/misc/security_rig
+	name = "hazard hardsuit (empty)"
+	contains = list(
+			/obj/item/weapon/rig/hazard = 1
+			)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/gear
+	containername = "hazard hardsuit crate"
+	access = access_armory
+
+/datum/supply_pack/misc/science_rig
+	name = "ami hardsuit (empty)"
+	contains = list(
+			/obj/item/weapon/rig/hazmat = 1
+			)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/gear
+	containername = "ami hardsuit crate"
+	access = access_rd
+
+/datum/supply_pack/misc/ce_rig
+	name = "advanced voidsuit (empty)"
+	contains = list(
+			/obj/item/weapon/rig/ce = 1
+			)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/gear
+	containername = "advanced voidsuit crate"
+	access = access_ce

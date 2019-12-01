@@ -24,7 +24,6 @@
 	priority = 1
 	allowed_tools = list(
 		/obj/item/weapon/surgical/FixOVein = 100,
-		/obj/item/stack/nanopaste = 50,
 		/obj/item/stack/cable_coil = 40,
 		/obj/item/device/assembly/mousetrap = 5)
 
@@ -59,9 +58,11 @@
 	priority = 3 //Do this instead of expanding the skull cavity
 	allowed_tools = list(
 		/obj/item/weapon/surgical/surgicaldrill = 100,
-		/obj/item/weapon/screwdriver = 75,
 		/obj/item/weapon/melee/changeling/arm_blade = 15,
-		/obj/item/weapon/pickaxe = 5)
+		/obj/item/weapon/pickaxe = 5
+	)
+
+	allowed_procs = list(IS_SCREWDRIVER = 75)
 
 	min_duration = 200 //Very. Very. Carefully.
 	max_duration = 300
@@ -100,8 +101,9 @@
 	priority = 3 //Do this instead of picking around for implants.
 	allowed_tools = list(
 		/obj/item/weapon/surgical/hemostat = 100,
-		/obj/item/weapon/wirecutters = 60,
 		/obj/item/weapon/melee/changeling/claw = 40) //Surprisingly, claws are kind of okay at picking things out.
+
+	allowed_procs = list(IS_WIRECUTTER = 60)
 
 	min_duration = 90
 	max_duration = 120
@@ -216,8 +218,9 @@
 	priority = 3 //Do this instead of searching for objects in the skull.
 	allowed_tools = list(
 		/obj/item/weapon/surgical/hemostat = 100,
-		/obj/item/weapon/wirecutters = 60,
 		/obj/item/weapon/melee/changeling/claw = 20) //Claws. Good for digging, not so much for moving.
+
+	allowed_procs = list(IS_WIRECUTTER = 60)
 
 	min_duration = 90
 	max_duration = 120

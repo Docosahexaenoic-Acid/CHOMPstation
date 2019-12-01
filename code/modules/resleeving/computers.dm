@@ -1,5 +1,7 @@
 /obj/machinery/computer/transhuman/resleeving
 	name = "resleeving control console"
+	catalogue_data = list(/datum/category_item/catalogue/information/organization/khi,
+						/datum/category_item/catalogue/technology/resleeving)
 	icon_keyboard = "med_key"
 	icon_screen = "dna"
 	light_color = "#315ab4"
@@ -16,7 +18,7 @@
 	var/synthetic_capable = 1
 	var/obj/item/weapon/disk/transcore/disk
 
-/obj/machinery/computer/transhuman/resleeving/initialize()
+/obj/machinery/computer/transhuman/resleeving/Initialize()
 	. = ..()
 	updatemodules()
 
@@ -121,7 +123,7 @@
 
 	var/pods_list_ui[0]
 	for(var/obj/machinery/clonepod/transhuman/pod in pods)
-		pods_list_ui[++pods_list_ui.len] = list("pod" = pod, "biomass" = pod.biomass)
+		pods_list_ui[++pods_list_ui.len] = list("pod" = pod, "biomass" = pod.get_biomass())
 
 	var/spods_list_ui[0]
 	for(var/obj/machinery/transhuman/synthprinter/spod in spods)
@@ -198,7 +200,7 @@
 	data["coredumped"] = SStranscore.core_dumped
 	data["emergency"] = disk ? 1 : 0
 
-	ui = nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnanoui.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "sleever.tmpl", "Resleeving Control Console", 400, 450)
 		ui.set_initial_data(data)
@@ -294,7 +296,7 @@
 						temp = "Error: Growpod is currently occupied."
 
 					//Not enough materials.
-					else if(pod.biomass < CLONE_BIOMASS)
+					else if(pod.get_biomass() < CLONE_BIOMASS)
 						temp = "Error: Not enough biomass."
 
 					//Gross pod (broke mid-cloning or something).
@@ -375,13 +377,14 @@
 		menu = href_list["menu"]
 		temp = ""
 
-	nanomanager.update_uis(src)
+	SSnanoui.update_uis(src)
 	add_fingerprint(usr)
 
 // In here because only relevant to computer
 /obj/item/weapon/cmo_disk_holder
 	name = "cmo emergency packet"
 	desc = "A small paper packet with printing on one side. \"Tear open in case of Code Delta or Emergency Evacuation ONLY. Use in any other case is UNLAWFUL.\""
+	catalogue_data = list(/datum/category_item/catalogue/technology/resleeving)
 	icon = 'icons/vore/custom_items_vr.dmi'
 	icon_state = "cmoemergency"
 	item_state = "card-id"
@@ -400,6 +403,7 @@
 	\"1.INSERT DISK INTO RESLEEVING CONSOLE\n\
 	2. BEGIN CORE DUMP PROCEDURE\n\
 	3. ENSURE DISK SAFETY WHEN EJECTED\""
+	catalogue_data = list(/datum/category_item/catalogue/technology/resleeving)
 	icon = 'icons/obj/cloning.dmi'
 	icon_state = "harddisk"
 	item_state = "card-id"

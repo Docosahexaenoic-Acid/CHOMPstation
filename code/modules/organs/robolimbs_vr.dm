@@ -46,6 +46,23 @@
 	icon = 'icons/obj/items_vr.dmi'
 	icon_state = "verkdisk"
 
+
+// tucker0666 : Frost
+/datum/robolimb/zenghu_frost
+    company = "Zeng-Hu"
+    desc = "This limb has realistic synthetic flesh covering with 'blue accents'."
+    icon = 'icons/mob/human_races/cyberlimbs/_fluff_vr/Frosty.dmi'
+    blood_color = "#45ccff"
+    lifelike = 1
+    skin_tone = 1
+    unavailable_to_build = 1
+    whitelisted_to = list("tucker0666")
+
+
+/obj/item/weapon/disk/limb/zenghu_frost
+    company = "Zeng-Hu (Modified)"
+    catalogue_data = list(/datum/category_item/catalogue/information/organization/zeng_hu)
+
 //////////////// General VS-only ones /////////////////
 /datum/robolimb/talon //They're buildable by default due to being extremely basic.
 	company = "Talon LLC"
@@ -86,6 +103,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Tajara"
 
 /obj/item/weapon/disk/limb/dsi_tajaran
@@ -99,6 +117,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Unathi"
 
 /obj/item/weapon/disk/limb/dsi_lizard
@@ -112,6 +131,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Sergal"
 
 /obj/item/weapon/disk/limb/dsi_sergal
@@ -125,6 +145,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Nevrean"
 
 /obj/item/weapon/disk/limb/dsi_nevrean
@@ -138,6 +159,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Vulpkanin"
 
 /obj/item/weapon/disk/limb/dsi_vulpkanin
@@ -151,6 +173,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Akula"
 
 /obj/item/weapon/disk/limb/dsi_akula
@@ -164,6 +187,7 @@
 	lifelike = 1
 	unavailable_to_build = 1
 	includes_tail = 1
+	skin_tone = 1
 	suggested_species = "Vasilissan"
 
 /obj/item/weapon/disk/limb/dsi_spider
@@ -174,6 +198,7 @@
 	desc = "This limb has a thin synthflesh casing with a few connection ports."
 	icon = 'icons/mob/human_races/cyberlimbs/DSITeshari/dsi_teshari.dmi'
 	lifelike = 1
+	skin_tone = 1
 	suggested_species = "Teshari"
 
 /datum/robolimb/dsi_teshari/New()

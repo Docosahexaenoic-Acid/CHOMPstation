@@ -84,11 +84,13 @@
 /mob/proc/can_overcome_gravity()
 	return FALSE
 
-/mob/living/carbon/human/can_overcome_gravity()
-	return species && species.can_overcome_gravity(src)
+/mob/living/can_overcome_gravity()
+	return hovering
 
-/mob/living/simple_animal/construct/can_overcome_gravity()
-	return 1 //They care not for standard physics.
+/mob/living/carbon/human/can_overcome_gravity()
+	. = ..()
+	if(!.)
+		return species && species.can_overcome_gravity(src)
 
 /mob/observer/zMove(direction)
 	var/turf/destination = (direction == UP) ? GetAbove(src) : GetBelow(src)
@@ -118,36 +120,44 @@
 	return ..()
 
 /mob/observer/can_ztravel()
-	return 1
+	return TRUE
 
-/mob/living/simple_animal/construct/can_ztravel()
-	return 1
+/mob/living/can_ztravel()
+	if(incapacitated())
+		return FALSE
+	return hovering
 
 /mob/living/carbon/human/can_ztravel()
 	if(incapacitated())
-		return 0
+		return FALSE
+
+	if(hovering)
+		return TRUE
 
 	if(flying) //VOREStation Edit. Allows movement up/down with wings.
 		return 1 //VOREStation Edit
 
 	if(Process_Spacemove())
-		return 1
+		return TRUE
 
 	if(Check_Shoegrip())	//scaling hull with magboots
 		for(var/turf/simulated/T in trange(1,src))
 			if(T.density)
-				return 1
+				return TRUE
 
 /mob/living/silicon/robot/can_ztravel()
 	if(incapacitated() || is_dead())
-		return 0
+		return FALSE
+
+	if(hovering)
+		return TRUE
 
 	if(Process_Spacemove()) //Checks for active jetpack
-		return 1
+		return TRUE
 
 	for(var/turf/simulated/T in trange(1,src)) //Robots get "magboots"
 		if(T.density)
-			return 1
+			return TRUE
 
 // TODO - Leshana Experimental
 
@@ -172,6 +182,9 @@
 
 	var/turf/below = GetBelow(src)
 	if(!below)
+		return
+
+	if(istype(below, /turf/space))
 		return
 
 	var/turf/T = loc
@@ -261,18 +274,14 @@
 	if((locate(/obj/structure/disposalpipe/up) in below) || locate(/obj/machinery/atmospherics/pipe/zpipe/up in below))
 		return FALSE
 
+/mob/living/can_fall()
+	if(hovering)
+		return FALSE
+	return ..()
+
 /mob/living/carbon/human/can_fall()
 	if(..())
 		return species.can_fall(src)
-
-/mob/living/simple_animal/parrot/can_fall() // Poly can fly.
-	return FALSE
-
-/mob/living/simple_animal/hostile/carp/can_fall() // So can carp apparently.
-	return FALSE
-
-/mob/living/simple_animal/construct/can_fall() //As do Constructs.
-	return FALSE
 
 // Check if this atom prevents things standing on it from falling. Return TRUE to allow the fall.
 /obj/proc/CanFallThru(atom/movable/mover as mob|obj, turf/target as turf)
@@ -329,6 +338,10 @@
 
 	// Detect if we made a silent landing.
 	if(locate(/obj/structure/stairs) in landing)
+		if(isliving(src))
+			var/mob/living/L = src
+			if(L.pulling)
+				L.pulling.forceMove(landing)
 		return 1
 	else
 		var/atom/A = find_fall_target(oldloc, landing)
@@ -453,7 +466,7 @@
 		if(!silent)
 			if(planetary)
 				visible_message("<span class='danger'><font size='3'>\A [src] falls out of the sky and crashes into \the [landing]!</font></span>", \
-					"<span class='danger'><font size='3'> You fall out of the skiy and crash into \the [landing]!</font></span>", \
+					"<span class='danger'><font size='3'> You fall out of the sky and crash into \the [landing]!</font></span>", \
 					"You hear something slam into \the [landing].")
 				var/turf/T = get_turf(landing)
 				explosion(T, 0, 1, 2)

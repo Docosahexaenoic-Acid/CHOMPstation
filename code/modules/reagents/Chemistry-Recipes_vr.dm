@@ -58,7 +58,8 @@
 		var/mob/living/carbon/human/H = holder.my_atom
 		if(H.stat == DEAD && (/mob/living/carbon/human/proc/reconstitute_form in H.verbs)) //no magical regen for non-regenners, and can't force the reaction on live ones
 			if(H.hasnutriment()) // make sure it actually has the conditions to revive
-				if(!H.reviving) // if it's not reviving, start doing so
+				if(H.revive_ready >= 1) // if it's not reviving, start doing so
+					H.revive_ready = REVIVING_READY // overrides the normal cooldown
 					H.visible_message("<span class='info'>[H] shudders briefly, then relaxes, faint movements stirring within.</span>")
 					H.chimera_regenerate()
 				else if (/mob/living/carbon/human/proc/hatch in H.verbs)// already reviving, check if they're ready to hatch
@@ -101,47 +102,8 @@
 	name = "Vermicetol"
 	id = "vermicetol"
 	result = "vermicetol"
-	required_reagents = list("kelotane" = 1, "dermaline" = 1, "shockchem" = 1, "phoron" = 0.1)
+	required_reagents = list("bicaridine" = 2, "shockchem" = 1, "phoron" = 0.1)
 	catalysts = list("phoron" = 5)
-	result_amount = 3
-
-///////////////////////////////////////////////////////////////////////////////////
-/// Sap recipes
-
-/datum/chemical_reaction/myelamine //This is the clotting agent used by clotting packs.
-	name = "Myelamine"
-	id = "myelamine"
-	result = "myelamine"
-	required_reagents = list("bicaridine" = 1, "iron" = 2, "kelotane" = 1, "bluesap" = 1)
-	result_amount = 1
-//Old version of above slightly modified
-/datum/chemical_reaction/myelamineold //This is the clotting agent used by clotting packs.
-	name = "Myelamineold"
-	id = "myelamineold"
-	result = "myelamine"
-	required_reagents = list("bicaridine" = 1, "iron" = 2, "kelotane" = 1, "spidertoxin" = 1)
-	result_amount = 1
-
-
-/datum/chemical_reaction/hannoa
-	name = "Hannoa"
-	id = "hannoa"
-	result = "hannoa"
-	required_reagents = list("purplesap" = 1, "iron" = 2, "kelotane" = 1, "carbon" = 1)
-	result_amount = 1
-
-/datum/chemical_reaction/bullvalene
-	name = "Bullvalene"
-	id = "bullvalene"
-	result = "bullvalene"
-	required_reagents = list("dermaline" = 1, "orangesap" = 1, "Copper" = 1)
-	result_amount = 1
-
-/datum/chemical_reaction/nutrient
-	name = "Nutriment"
-	id = "nutriment"
-	result = "nutriment"
-	required_reagents = list("purplesap" = 1, "orangesap" = 1, "bluesap" = 1)
 	result_amount = 3
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -197,6 +159,8 @@
 				if(prob(50))
 					for(var/j = 1, j <= rand(1, 3), j++)
 						step(B, pick(NORTH,SOUTH,EAST,WEST))
+
+
 
 
 /datum/chemical_reaction/materials
@@ -281,12 +245,16 @@
 			M << "<span class='notice'> You suddenly feel a chill!</span>"
 
 
+
+
 /datum/chemical_reaction/slimefrost
 	name = "Slime Frost Oil"
 	id = "m_frostoil"
 	result = "frostoil"
 	required_reagents = list("phoron" = 5, "slimejelly" = 5, "water" = 5, "coolant" = 5)
 	result_amount = 10
+
+
 
 
 /datum/chemical_reaction/slimefire
@@ -313,6 +281,9 @@
 	result_amount = 1
 
 
+
+
+
 /datum/chemical_reaction/slimeheal //A slime healing mixture. Why not.
 	name = "Slime Health"
 	id = "slimeheal"
@@ -329,7 +300,6 @@
 			C.adjustCloneLoss(-25)
 			C.updatehealth()
 
-
 /datum/chemical_reaction/slimejelly
 	name = "Slime Jam"
 	id = "m_jam"
@@ -338,6 +308,9 @@
 	result_amount = 5
 
 
+
+
+/* //VORESTATION AI TEMPORARY REMOVAL
 /datum/chemical_reaction/slimevore
 	name = "Slime Vore" // Hostile vore mobs only
 	id = "m_tele"
@@ -345,11 +318,11 @@
 	required_reagents = list("phoron" = 20, "nutriment" = 20, "sugar" = 20, "mutationtoxin" = 20) //Can't do slime jelly as it'll conflict with another, but mutation toxin will do.
 	result_amount = 1
 	on_reaction(var/datum/reagents/holder)
-		var/mob_path = /mob/living/simple_animal
+		var/mob_path = /mob/living/simple_mob
 		var/blocked = list(
-			/mob/living/simple_animal/hostile/mimic,
-			/mob/living/simple_animal/hostile/alien/queen,
-			/mob/living/simple_animal/shadekin
+			/mob/living/simple_mob/hostile/mimic,
+			/mob/living/simple_mob/animal/space/alien/queen,
+			/mob/living/simple_mob/shadekin
 			)//exclusion list for things you don't want the reaction to create.
 		var/list/voremobs = typesof(mob_path) - mob_path - blocked // list of possible hostile mobs
 
@@ -362,9 +335,16 @@
 		var/spawn_count = rand(1,3)
 		for(var/i = 1, i <= spawn_count, i++)
 			var/chosen = pick(voremobs)
-			var/mob/living/simple_animal/hostile/C = new chosen
+			var/mob/living/simple_mob/hostile/C = new chosen
 			C.faction = "slimesummon"
 			C.loc = get_turf(holder.my_atom)
 			if(prob(50))
 				for(var/j = 1, j <= rand(1, 3), j++)
 					step(C, pick(NORTH,SOUTH,EAST,WEST))
+*/
+
+/datum/chemical_reaction/food/syntiflesh
+	required_reagents = list("blood" = 5, "clonexadone" = 1)
+
+/datum/chemical_reaction/biomass
+	result_amount = 6	// Roughly 120u per phoron sheet

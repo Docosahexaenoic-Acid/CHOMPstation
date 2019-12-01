@@ -1,9 +1,4 @@
-//GLOBAL_LIST_BOILERPLATE(all_portals, /obj/effect/portal)
-// No fucking idea what this proc does but it doesn't seem to
-// help when we need to refere to the global portals list.
-
-var/global/list/portals = list()					// Just a list for portals <3
-
+GLOBAL_LIST_BOILERPLATE(all_portals, /obj/effect/portal)
 
 /obj/effect/portal
 	name = "portal"
@@ -18,43 +13,41 @@ var/global/list/portals = list()					// Just a list for portals <3
 	anchored = 1.0
 
 /obj/effect/portal/Bumped(mob/M as mob|obj)
-//	spawn(0)
-//		src.teleport(M)
-//		return
-//	return
-	teleport(M)
+	if(istype(M,/mob) && !(istype(M,/mob/living)))
+		return	//do not send ghosts, zshadows, ai eyes, etc
+	spawn(0)
+		src.teleport(M)
+		return
+	return
 
 /obj/effect/portal/Crossed(AM as mob|obj)
-//	spawn(0)
-//		src.teleport(AM)
-//		return
-//	return
-	teleport(AM)
+	//VOREStation Edit begin: SHADEKIN
+	var/mob/SK = AM
+	if(istype(SK))
+		if(SK.shadekin_phasing_check())
+			return
+	//VOREStation Edit end: SHADEKIN
+	if(istype(AM,/mob) && !(istype(AM,/mob/living)))
+		return	//do not send ghosts, zshadows, ai eyes, etc
+	spawn(0)
+		src.teleport(AM)
+		return
+	return
 
 /obj/effect/portal/attack_hand(mob/user as mob)
-//	spawn(0)
-//		src.teleport(user)
-//		return
-//	return
-	teleport(user)
+	if(istype(user) && !(istype(user,/mob/living)))
+		return	//do not send ghosts, zshadows, ai eyes, etc
+	spawn(0)
+		src.teleport(user)
+		return
+	return
 
-/obj/effect/portal/New(loc, turf/target, creator=null, lifespan=300)
-	//I'm actually concerned with the ammount of spaghet on my plate today. - Jon
-//	spawn(300)
-//		qdel(src)
-//		return
-//	return
-	portals += src
-	src.loc = loc
-	src.target = target
-	src.creator = creator
-	if(lifespan > 0)
-		spawn(lifespan)
-			qdel(src)
-
-/obj/effect/portal/Destroy()
-	portals -= src
-	return ..()
+/obj/effect/portal/New()
+	..() // Necessary for the list boilerplate to work
+	spawn(300)
+		qdel(src)
+		return
+	return
 
 /obj/effect/portal/proc/teleport(atom/movable/M as mob|obj)
 	if(istype(M, /obj/effect)) //sparks don't teleport
@@ -72,10 +65,4 @@ var/global/list/portals = list()					// Just a list for portals <3
 			do_teleport(M, locate(rand(5, world.maxx - 5), rand(5, world.maxy -5), 3), 0)
 		else
 			do_teleport(M, target, 1) ///You will appear adjacent to the beacon
-
-// New addition to remove portals via multitools like on codebases like Paradise. - Jon
-/obj/effect/portal/attackby(obj/item/A, mob/user)
-	if(istype(A, /obj/item/device/multitool))
-		qdel(src)
-
 

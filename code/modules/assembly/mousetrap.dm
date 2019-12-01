@@ -40,7 +40,7 @@
 				H.UpdateDamageIcon()
 			H.updatehealth()
 	else if(ismouse(target))
-		var/mob/living/simple_animal/mouse/M = target
+		var/mob/living/simple_mob/animal/passive/mouse/M = target
 		visible_message("<font color='red'><b>SPLAT!</b></font>")
 		M.splat()
 	playsound(target.loc, 'sound/effects/snap.ogg', 50, 1)
@@ -83,6 +83,12 @@
 
 
 /obj/item/device/assembly/mousetrap/Crossed(AM as mob|obj)
+	//VOREStation Edit begin: SHADEKIN
+	var/mob/SK = AM
+	if(istype(SK))
+		if(SK.shadekin_phasing_check())
+			return
+	//VOREStation Edit end: SHADEKIN
 	if(armed)
 		if(ishuman(AM))
 			var/mob/living/carbon/H = AM

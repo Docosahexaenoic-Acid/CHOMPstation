@@ -32,12 +32,13 @@
 		/obj/item/weapon/photo,
 		/obj/item/weapon/reagent_containers/dropper,
 		/obj/item/weapon/sample,
-		/obj/item/weapon/screwdriver,
+		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/stamp,
 		/obj/item/clothing/accessory/permit,
-		/obj/item/clothing/accessory/badge
+		/obj/item/clothing/accessory/badge,
+		/obj/item/weapon/makeover
 		)
-	cant_hold = list(/obj/item/weapon/screwdriver/power)
+	cant_hold = list(/obj/item/weapon/tool/screwdriver/power)
 	slot_flags = SLOT_ID
 
 	var/obj/item/weapon/card/id/front_id = null
@@ -82,10 +83,10 @@
 	..()
 	var/amount = rand(50, 100) + rand(50, 100) // Triangular distribution from 100 to 200
 	var/obj/item/weapon/spacecash/SC = null
+	SC = new(src)
 	for(var/i in list(100, 50, 20, 10, 5, 1))
 		if(amount < i)
 			continue
-		SC = new(src)
 		while(amount >= i)
 			amount -= i
 			SC.adjust_worth(i, 0)

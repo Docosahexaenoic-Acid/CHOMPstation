@@ -51,20 +51,10 @@
 
 
 /atom/movable/proc/buckle_mob(mob/living/M, forced = FALSE, check_loc = TRUE)
-	if(!buckled_mobs)
-		buckled_mobs = list()
-
-	if(!istype(M))
-		return FALSE
-
 	if(check_loc && M.loc != loc)
 		return FALSE
 
-	if((!can_buckle && !forced) || M.buckled || M.pinned.len || (buckled_mobs.len >= max_buckled_mobs) || (buckle_require_restraints && !M.restrained()))
-		return FALSE
-
-	if(has_buckled_mobs() && buckled_mobs.len >= max_buckled_mobs) //Handles trying to buckle yourself to the chair when someone is on it
-		to_chat(M, "<span class='notice'>\The [src] can't buckle anymore people.</span>")
+	if(!can_buckle_check(M, forced))
 		return FALSE
 
 	M.buckled = src
@@ -130,6 +120,8 @@
 	if(M in buckled_mobs)
 		to_chat(user, "<span class='warning'>\The [M] is already buckled to \the [src].</span>")
 		return FALSE
+	if(!can_buckle_check(M, forced))
+		return FALSE
 
 	add_fingerprint(user)
 //	unbuckle_mob()
@@ -142,17 +134,29 @@
 
 	. = buckle_mob(M, forced)
 	if(.)
+		var/reveal_message = list("buckled_mob" = null, "buckled_to" = null) //VORE EDIT: This being a list and messages existing for the buckle target atom.
 		if(!silent)
 			if(M == user)
+				reveal_message["buckled_mob"] = "<span class='notice'>You come out of hiding and buckle yourself to [src].</span>" //VORE EDIT
+				reveal_message["buckled_to"] = "<span class='notice'>You come out of hiding as [M.name] buckles themselves to you.</span>" //VORE EDIT
 				M.visible_message(\
 					"<span class='notice'>[M.name] buckles themselves to [src].</span>",\
 					"<span class='notice'>You buckle yourself to [src].</span>",\
 					"<span class='notice'>You hear metal clanking.</span>")
 			else
+				reveal_message["buckled_mob"] = "<span class='notice'>You are revealed as you are buckled to [src].</span>" //VORE EDIT
+				reveal_message["buckled_to"] = "<span class='notice'>You are revealed as [M.name] is buckled to you.</span>" //VORE EDIT
 				M.visible_message(\
 					"<span class='danger'>[M.name] is buckled to [src] by [user.name]!</span>",\
 					"<span class='danger'>You are buckled to [src] by [user.name]!</span>",\
 					"<span class='notice'>You hear metal clanking.</span>")
+
+		M.reveal(silent, reveal_message["buckled_mob"]) //Reveal people so they aren't buckled to chairs from behind. //VORE EDIT, list arg instead of simple message var for buckled mob
+		//Vore edit start
+		var/mob/living/L = src
+		if(istype(L))
+			L.reveal(silent, reveal_message["buckled_to"])
+		//Vore edit end
 
 /atom/movable/proc/user_unbuckle_mob(mob/living/buckled_mob, mob/user)
 	var/mob/living/M = unbuckle_mob(buckled_mob)
@@ -184,13 +188,18 @@
 				L.set_dir(dir)
 	return TRUE
 
-/atom/movable/Move(atom/newloc, direct = 0)
-	. = ..()
-	if(. && has_buckled_mobs() && !handle_buckled_mob_movement(newloc, direct)) //movement failed due to buckled mob(s)
-		. = 0
-	//VOREStation Add
-	else if(. && riding_datum)
-		riding_datum.handle_vehicle_layer()
-		riding_datum.handle_vehicle_offsets()
-	//VOREStation Add End
-	
+/atom/movable/proc/can_buckle_check(mob/living/M, forced = FALSE)
+	if(!buckled_mobs)
+		buckled_mobs = list()
+
+	if(!istype(M))
+		return FALSE
+
+	if((!can_buckle && !forced) || M.buckled || M.pinned.len || (buckled_mobs.len >= max_buckled_mobs) || (buckle_require_restraints && !M.restrained()))
+		return FALSE
+
+	if(has_buckled_mobs() && buckled_mobs.len >= max_buckled_mobs) //Handles trying to buckle yourself to the chair when someone is on it
+		to_chat(M, "<span class='notice'>\The [src] can't buckle anymore people.</span>")
+		return FALSE
+
+	return TRUE

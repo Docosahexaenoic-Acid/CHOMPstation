@@ -65,17 +65,16 @@
 	vermin = rand(0,2)
 	switch(vermin)
 		if(VERM_MICE)
-			spawn_types = list(/mob/living/simple_animal/mouse)
+			spawn_types = list(/mob/living/simple_mob/animal/passive/mouse/gray, /mob/living/simple_mob/animal/passive/mouse/brown, /mob/living/simple_mob/animal/passive/mouse/white)
 			max_number = 12
 			vermstring = "mice"
 		if(VERM_LIZARDS)
-			spawn_types = list(/mob/living/simple_animal/lizard)
+			spawn_types = list(/mob/living/simple_mob/animal/passive/lizard)
 			max_number = 6
 			vermstring = "lizards"
 		if(VERM_SPIDERS)
 			spawn_types = list(/obj/effect/spider/spiderling)
-//			rand(2,8) //Not sure if this would work instead
-			max_number = 8
+			max_number = 3
 			vermstring = "spiders"
 
 	spawn(0)
@@ -87,7 +86,7 @@
 
 			if(vermin == VERM_SPIDERS)
 				var/obj/effect/spider/spiderling/S = new(T)
-				S.amount_grown = 0
+				S.amount_grown = -1
 			else
 				var/spawn_type = pick(spawn_types)
 				new spawn_type(T)

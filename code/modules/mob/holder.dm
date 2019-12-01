@@ -23,10 +23,10 @@ var/list/holder_mob_icon_cache = list()
 
 /obj/item/weapon/holder/New()
 	..()
-	processing_objects.Add(src)
+	START_PROCESSING(SSobj, src)
 
 /obj/item/weapon/holder/Destroy()
-	processing_objects.Remove(src)
+	STOP_PROCESSING(SSobj, src)
 	return ..()
 
 /obj/item/weapon/holder/process()
@@ -95,11 +95,34 @@ var/list/holder_mob_icon_cache = list()
 /obj/item/weapon/holder/drone
 	origin_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 5)
 
+/obj/item/weapon/holder/pai
+	origin_tech = list(TECH_DATA = 2)
+
 /obj/item/weapon/holder/mouse
 	w_class = ITEMSIZE_TINY
 
 /obj/item/weapon/holder/borer
 	origin_tech = list(TECH_BIO = 6)
+
+/obj/item/weapon/holder/leech
+	color = "#003366"
+	origin_tech = list(TECH_BIO = 5, TECH_PHORON = 2)
+
+/obj/item/weapon/holder/fish
+	attack_verb = list("fished", "disrespected", "smacked", "smackereled")
+	hitsound = 'sound/effects/slime_squish.ogg'
+	slot_flags = SLOT_HOLSTER
+	origin_tech = list(TECH_BIO = 3)
+
+/obj/item/weapon/holder/fish/afterattack(var/atom/target, var/mob/living/user, proximity)
+	if(!target)
+		return
+	if(!proximity)
+		return
+	if(isliving(target))
+		var/mob/living/L = target
+		if(prob(10))
+			L.Stun(2)
 
 /obj/item/weapon/holder/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	for(var/mob/M in src.contents)
@@ -133,11 +156,11 @@ var/list/holder_mob_icon_cache = list()
 
 	if(self_grab)
 		grabber << "<span class='notice'>\The [src] clambers onto you!</span>"
-		src << "<span class='notice'>You climb up onto \the [grabber]!</span>"
+		to_chat(src, "<span class='notice'>You climb up onto \the [grabber]!</span>")
 		grabber.equip_to_slot_if_possible(H, slot_back, 0, 1)
 	else
 		grabber << "<span class='notice'>You scoop up \the [src]!</span>"
-		src << "<span class='notice'>\The [grabber] scoops you up!</span>"
+		to_chat(src, "<span class='notice'>\The [grabber] scoops you up!</span>")
 
 	H.sync(src)
 	return H

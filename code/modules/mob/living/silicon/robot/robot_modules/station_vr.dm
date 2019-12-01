@@ -24,7 +24,7 @@
 					LANGUAGE_SIIK		= 1,
 					LANGUAGE_SKRELLIAN	= 1,
 					LANGUAGE_ROOTLOCAL	= 0,
-					LANGUAGE_GUTTER		= 0,
+					LANGUAGE_GUTTER		= 1,
 					LANGUAGE_SCHECHI	= 1,
 					LANGUAGE_EAL		= 1,
 					LANGUAGE_SIGN		= 0,
@@ -63,75 +63,94 @@
 
 /obj/item/weapon/robot_module/robot/medical/surgeon //VOREStation sprites
 	vr_sprites = list(
-						"Acheron" = "mechoid-Medical"
+						"Acheron" = "mechoid-Medical",
+						"Shellguard Noble" = "Noble-MED",
+						"ZOOM-BA" = "zoomba-medical"
 					 )
 
 /obj/item/weapon/robot_module/robot/medical/crisis //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-med",
-						"Acheron" = "mechoid-Medical"
+						"Acheron" = "mechoid-Medical",
+						"Shellguard Noble" = "Noble-MED",
+						"ZOOM-BA" = "zoomba-crisis"
 					 )
 
 /obj/item/weapon/robot_module/robot/clerical/butler //VOREStation sprites
 	vr_sprites = list(
 						"Handy - Service" = "handy-service",
 						"Handy - Hydro" = "handy-hydro",
-						"Acheron" = "mechoid-Service"
+						"Acheron" = "mechoid-Service",
+						"Shellguard Noble" = "Noble-SRV",
+						"ZOOM-BA" = "zoomba-service"
 					 )
 
 /obj/item/weapon/robot_module/robot/clerical/general //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-clerk",
-						"Acheron" = "mechoid-Service"
+						"Acheron" = "mechoid-Service",
+						"Shellguard Noble" = "Noble-SRV",
+						"ZOOM-BA" = "zoomba-clerical"
 					 )
 
 /obj/item/weapon/robot_module/robot/janitor //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-janitor",
-						"Acheron" = "mechoid-Janitor"
+						"Acheron" = "mechoid-Janitor",
+						"Shellguard Noble" = "Noble-CLN",
+						"ZOOM-BA" = "zoomba-janitor"
 					 )
 
 /obj/item/weapon/robot_module/robot/security/general //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-sec",
-						"Acheron" = "mechoid-Security"
+						"Acheron" = "mechoid-Security",
+						"Shellguard Noble" = "Noble-SEC",
+						"ZOOM-BA" = "zoomba-security"
 					 )
 
 /obj/item/weapon/robot_module/robot/miner //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-miner",
-						"Acheron" = "mechoid-Miner"
+						"Acheron" = "mechoid-Miner",
+						"Shellguard Noble" = "Noble-DIG",
+						"ZOOM-BA" = "zoomba-miner"
 					 )
 
 /obj/item/weapon/robot_module/robot/standard //VOREStation sprites
 	vr_sprites = list(
 						"Handy" = "handy-standard",
-						"Acheron" = "mechoid-Standard"
+						"Acheron" = "mechoid-Standard",
+						"Shellguard Noble" = "Noble-STD",
+						"ZOOM-BA" = "zoomba-standard"
 					 )
 
 /obj/item/weapon/robot_module/robot/engineering/general //VOREStation sprites
 	vr_sprites = list(
-						"Acheron" = "mechoid-Engineering"
+						"Acheron" = "mechoid-Engineering",
+						"Shellguard Noble" = "Noble-ENG",
+						"ZOOM-BA" = "zoomba-engineering"
 					 )
 
 /obj/item/weapon/robot_module/robot/research //VOREStation sprites
 	vr_sprites = list(
-						"Acheron" = "mechoid-Science"
+						"Acheron" = "mechoid-Science",
+						"ZOOM-BA" = "zoomba-research"
 					 )
 
 /obj/item/weapon/robot_module/robot/security/combat //VOREStation sprites
 	vr_sprites = list(
-						"Acheron" = "mechoid-Combat"
+						"Acheron" = "mechoid-Combat",
+						"ZOOM-BA" = "zoomba-combat"
 					 )
 
 /obj/item/weapon/robot_module/robot/knine
 	name = "k9 robot module"
-	can_buckle = 1
 	sprites = list(
 					"K9 hound" = "k9",
 					"K9 Alternative (Static)" = "k92",
 					"Secborg model V-2" = "secborg",
-					"Secborg model V-3" = "SecVale"
+					"Borgi" = "borgi-sec"
 					)
 	channels = list("Security" = 1)
 	networks = list(NETWORK_SECURITY)
@@ -147,11 +166,9 @@
 	src.modules += new /obj/item/weapon/dogborg/pounce(src) //Pounce
 	src.emag 	 = new /obj/item/weapon/gun/energy/laser/mounted(src) //Emag. Not a big problem.
 
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	var/datum/matter_synth/water = new /datum/matter_synth(500) //Starts full and has a max of 500
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 	synths += water
 
@@ -172,6 +189,9 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/robot/knine/respawn_consumable(var/mob/living/silicon/robot/R, var/amount)
@@ -195,7 +215,6 @@
 
 /obj/item/weapon/robot_module/robot/medihound
 	name = "MediHound module"
-	can_buckle = 1
 	channels = list("Medical" = 1)
 	networks = list(NETWORK_MEDICAL)
 	subsystems = list(/mob/living/silicon/proc/subsystem_crew_monitor)
@@ -204,28 +223,28 @@
 					"Medical Hound" = "medihound",
 					"Dark Medical Hound (Static)" = "medihounddark",
 					"Mediborg model V-2" = "vale",
-					"Mediborg model V-3" = "vale2"
+					"Borgi" = "borgi-medi"
 					)
 
 /obj/item/weapon/robot_module/robot/medihound/New(var/mob/living/silicon/robot/R)
 	src.modules += new /obj/item/weapon/dogborg/jaws/small(src) //In case a patient is being attacked by carp.
 	src.modules += new /obj/item/device/dogborg/boop_module(src) //Boop the crew.
 	src.modules += new /obj/item/device/healthanalyzer(src) // See who's hurt specificially.
-	src.modules += new /obj/item/weapon/reagent_containers/borghypo(src)//So medi-hounds aren't nearly useless
 	src.modules += new /obj/item/weapon/reagent_containers/syringe(src) //In case the chemist is nice!
 	src.modules += new /obj/item/weapon/reagent_containers/glass/beaker(src)//For holding the chemicals when the chemist is nice
 	src.modules += new /obj/item/device/sleevemate(src) //Lets them scan people.
-	src.modules += new /obj/item/weapon/gripper/medical(src)//Now you can set up cyro or make peri.
 	src.modules += new /obj/item/weapon/shockpaddles/robot/hound(src) //Paws of life
 	src.emag 	 = new /obj/item/weapon/dogborg/pounce(src) //Pounce
 
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	var/datum/matter_synth/water = new /datum/matter_synth(500)
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 	synths += water
+
+	var/obj/item/weapon/reagent_containers/borghypo/hound/H = new /obj/item/weapon/reagent_containers/borghypo/hound(src)
+	H.water = water
+	src.modules += H
 
 	var/obj/item/device/dogborg/tongue/T = new /obj/item/device/dogborg/tongue(src)
 	T.water = water
@@ -234,29 +253,6 @@
 	var/obj/item/device/dogborg/sleeper/B = new /obj/item/device/dogborg/sleeper(src) //So they can nom people and heal them
 	B.water = water
 	src.modules += B
-
-	//CHOMPStation Edit Begin
-	//Adds tools for medihound to treat patients without sleeper. Traumakits, Advance Ointment, and Splints.
-
-	var/datum/matter_synth/medicine = new /datum/matter_synth/medicine(15000)
-	synths += medicine
-
-	var/obj/item/stack/medical/advanced/ointment/O = new /obj/item/stack/medical/advanced/ointment(src)
-	var/obj/item/stack/medical/advanced/bruise_pack/bruise_pack = new /obj/item/stack/medical/advanced/bruise_pack(src)
-	var/obj/item/stack/medical/splint/S = new /obj/item/stack/medical/splint(src)
-	O.uses_charge = 1
-	O.charge_costs = list(1000)
-	O.synths = list(medicine)
-	bruise_pack.uses_charge = 1
-	bruise_pack.charge_costs = list(1000)
-	bruise_pack.synths = list(medicine)
-	S.uses_charge = 1
-	S.charge_costs = list(1000)
-	S.synths = list(medicine)
-	src.modules += O
-	src.modules += bruise_pack
-	src.modules += S
-	//CHOMPStation Edit End
 
 	R.icon = 'icons/mob/widerobot_vr.dmi'
 	R.hands.icon = 'icons/mob/screen1_robot_vr.dmi'
@@ -267,16 +263,19 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/robot/ert
-	name = "Emergency Response module"
-	can_buckle = 1
+	name = "Emergency Responce module"
 	channels = list("Security" = 1)
 	networks = list(NETWORK_SECURITY)
 	can_be_pushed = 0
 	sprites = list(
-					"Standard" = "ert"
+					"Standard" = "ert",
+					"Borgi" = "borgi"
 					)
 
 /obj/item/weapon/robot_module/robot/ert/New(var/mob/living/silicon/robot/R)
@@ -288,11 +287,9 @@
 	src.modules += new /obj/item/weapon/dogborg/swordtail(src)
 	src.emag     = new /obj/item/weapon/gun/energy/laser/mounted(src)
 
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	var/datum/matter_synth/water = new /datum/matter_synth(500)
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 	synths += water
 
@@ -313,13 +310,16 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/robot/scrubpup
 	name = "Custodial Hound module"
-	can_buckle = 1
 	sprites = list(
 					"Custodial Hound" = "scrubpup",
+					"Borgi" = "borgi-jani"
 					)
 	channels = list("Service" = 1)
 	can_be_pushed = 0
@@ -334,18 +334,16 @@
 	var/datum/matter_synth/metal = new /datum/matter_synth/metal()
 	metal.name = "Steel reserves"
 	metal.recharge_rate = 0
-	metal.max_energy = 100000
+	metal.max_energy = 50000
 	metal.energy = 0
 	var/datum/matter_synth/glass = new /datum/matter_synth/glass()
 	glass.name = "Glass reserves"
 	glass.recharge_rate = 0
-	glass.max_energy = 100000
+	glass.max_energy = 50000
 	glass.energy = 0
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	var/datum/matter_synth/water = new /datum/matter_synth(500)
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 
 	synths += metal
@@ -393,13 +391,16 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/robot/science
 	name = "Research Hound Module"
-	can_buckle = 1
 	sprites = list(
 					"Research Hound" = "science",
+					"Borgi" = "borgi-sci"
 					)
 	channels = list("Science" = 1)
 	can_be_pushed = 0
@@ -409,16 +410,14 @@
 	src.modules += new /obj/item/device/dogborg/boop_module(src)
 	src.modules += new /obj/item/weapon/gripper/research(src)
 	src.modules += new /obj/item/weapon/gripper/no_use/loader(src)
-	src.modules += new /obj/item/weapon/screwdriver/cyborg(src)
+	src.modules += new /obj/item/weapon/tool/screwdriver/cyborg(src)
 	src.modules += new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	src.modules += new /obj/item/weapon/storage/part_replacer(src)
 	src.emag = new /obj/item/weapon/hand_tele(src)
 
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	var/datum/matter_synth/water = new /datum/matter_synth(500)
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 	synths += water
 
@@ -439,13 +438,16 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/robot/engiedog
 	name = "Construction Hound module"
-	can_buckle = 1
 	sprites = list(
 					"Pupdozer" = "pupdozer",
+					"Borgi" = "borgi-eng"
 					)
 	channels = list("Engineering" = 1)
 	networks = list(NETWORK_ENGINEERING)
@@ -455,44 +457,44 @@
 /obj/item/weapon/robot_module/robot/engiedog/New(var/mob/living/silicon/robot/R)
 	src.modules += new /obj/item/borg/sight/meson(src)
 	src.modules += new /obj/item/weapon/weldingtool/electric/mounted/cyborg(src)
-	src.modules += new /obj/item/weapon/screwdriver/cyborg(src)
-	src.modules += new /obj/item/weapon/wrench/cyborg(src)
-	src.modules += new /obj/item/weapon/wirecutters/cyborg(src)
+	src.modules += new /obj/item/weapon/tool/screwdriver/cyborg(src)
+	src.modules += new /obj/item/weapon/tool/wrench/cyborg(src)
+	src.modules += new /obj/item/weapon/tool/wirecutters/cyborg(src)
 	src.modules += new /obj/item/device/multitool(src)
 	src.modules += new /obj/item/device/t_scanner(src)
 	src.modules += new /obj/item/taperoll/engineering(src)
 	src.modules += new /obj/item/weapon/inflatable_dispenser/robot(src)
-	src.modules += new /obj/item/device/geiger(src)
+	src.modules += new /obj/item/weapon/pickaxe(src)
 	src.modules += new /obj/item/weapon/dogborg/jaws/small(src)
 	src.modules += new /obj/item/device/dogborg/boop_module(src)
+	src.modules += new /obj/item/weapon/gripper(src)
+	src.modules += new /obj/item/weapon/gripper/circuit(src)
 	src.emag 	 = new /obj/item/weapon/dogborg/pounce(src)
 
 	//Painfully slow charger regen but high capacity. Also starts with low amount.
 	var/datum/matter_synth/metal = new /datum/matter_synth/metal()
 	metal.name = "Steel reserves"
-	metal.recharge_rate = 50
-	metal.max_energy = 100000
-	metal.energy = 5000
+	metal.recharge_rate = 100
+	metal.max_energy = 50000
+	metal.energy = 10000
 	var/datum/matter_synth/glass = new /datum/matter_synth/glass()
 	glass.name = "Glass reserves"
-	glass.recharge_rate = 50
-	glass.max_energy = 100000
-	glass.energy = 5000
+	glass.recharge_rate = 100
+	glass.max_energy = 50000
+	glass.energy = 10000
 	var/datum/matter_synth/wood = new /datum/matter_synth/wood()
 	wood.name = "Wood reserves"
-	wood.recharge_rate = 50
-	wood.max_energy = 100000
-	wood.energy = 5000
+	wood.recharge_rate = 100
+	wood.max_energy = 50000
+	wood.energy = 10000
 	var/datum/matter_synth/plastic = new /datum/matter_synth/plastic()
 	plastic.name = "Plastic reserves"
-	plastic.recharge_rate = 50
-	plastic.max_energy = 100000
-	plastic.energy = 5000
-	var/datum/matter_synth/water = new /datum/matter_synth()
+	plastic.recharge_rate = 100
+	plastic.max_energy = 50000
+	plastic.energy = 10000
+	var/datum/matter_synth/water = new /datum/matter_synth(500)
 	water.name = "Water reserves"
 	water.recharge_rate = 0
-	water.max_energy = 1000
-	water.energy = 0
 	R.water_res = water
 
 	var/datum/matter_synth/wire = new /datum/matter_synth/wire()
@@ -516,6 +518,7 @@
 	MD.glass = glass
 	MD.wood = wood
 	MD.plastic = plastic
+	MD.water = water
 	src.modules += MD
 
 	var/obj/item/stack/material/cyborg/steel/M = new (src)
@@ -563,6 +566,9 @@
 	R.dogborg = TRUE
 	R.wideborg = TRUE
 	R.verbs |= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs |= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs |= /mob/living/proc/shred_limb
+	R.verbs |= /mob/living/silicon/robot/proc/rest_style
 	..()
 
 /obj/item/weapon/robot_module/Reset(var/mob/living/silicon/robot/R)
@@ -575,4 +581,7 @@
 	R.default_pixel_x = initial(pixel_x)
 	R.scrubbing = FALSE
 	R.verbs -= /mob/living/silicon/robot/proc/ex_reserve_refill
+	R.verbs -= /mob/living/silicon/robot/proc/robot_mount
+	R.verbs -= /mob/living/proc/shred_limb
+	R.verbs -= /mob/living/silicon/robot/proc/rest_style
 	..()

@@ -171,8 +171,11 @@
 					to_chat(user, "<span class='danger'>You cannot inject a robotic limb.</span>")
 					return
 
-			var/warmup_time = 0 //None if we're using this on ourselves.
 			var/cycle_time = injtime*0.33 //33% of the time slept between 5u doses
+			var/warmup_time = 0	//0 for containers
+			if(ismob(target))
+				warmup_time = cycle_time //If the target is another mob, this gets overwritten
+
 			if(ismob(target) && target != user)
 				warmup_time = injtime*0.66 //66% of the time is warmup
 
@@ -180,8 +183,8 @@
 					if(H.wear_suit)
 						if(istype(H.wear_suit, /obj/item/clothing/suit/space))
 							injtime = injtime * 2
-						else if(!H.can_inject(user, 1))
-							return
+					if(!H.can_inject(user, 1))
+						return
 
 				else if(isliving(target))
 
@@ -201,14 +204,14 @@
 
 			var/trans = 0
 			var/contained = reagentlist()
-			while(reagents.total_volume)
-				if(ismob(target))
+			if(ismob(target))
+				while(reagents.total_volume)
 					trans += reagents.trans_to_mob(target, amount_per_transfer_from_this, CHEM_BLOOD)
-				else
-					trans += reagents.trans_to_obj(target, amount_per_transfer_from_this)
-				update_icon()
-				if(!reagents.total_volume || !do_after(user,cycle_time,target))
-					break
+					update_icon()
+					if(!reagents.total_volume || !do_after(user,cycle_time,target))
+						break
+			else
+				trans += reagents.trans_to_obj(target, amount_per_transfer_from_this)
 
 			if (reagents.total_volume <= 0 && mode == SYRINGE_INJECT)
 				mode = SYRINGE_DRAW
@@ -221,7 +224,7 @@
 			else
 				to_chat(user, "<span class='notice'>The syringe is empty.</span>")
 
-//			dirty(target,affected) //VOREStation Add
+//		dirty(target,affected) //VOREStation Add -- Removed by Request
 
 	return
 /* VOREStation Edit - See syringes_vr.dm
@@ -330,46 +333,46 @@
 	name = "Syringe (inaprovaline)"
 	desc = "Contains inaprovaline - used to stabilize patients."
 
-/obj/item/weapon/reagent_containers/syringe/inaprovaline/New()
-	..()
+/obj/item/weapon/reagent_containers/syringe/inaprovaline/Initialize()
+	. = ..()
 	reagents.add_reagent("inaprovaline", 15)
-	mode = SYRINGE_INJECT
-	update_icon()
+	//mode = SYRINGE_INJECT //VOREStation Edit - Starts capped
+	//update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/antitoxin
 	name = "Syringe (anti-toxin)"
 	desc = "Contains anti-toxins."
 
-/obj/item/weapon/reagent_containers/syringe/antitoxin/New()
-	..()
+/obj/item/weapon/reagent_containers/syringe/antitoxin/Initialize()
+	. = ..()
 	reagents.add_reagent("anti_toxin", 15)
-	mode = SYRINGE_INJECT
-	update_icon()
+	//mode = SYRINGE_INJECT //VOREStation Edit - Starts capped
+	//update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/antiviral
 	name = "Syringe (spaceacillin)"
 	desc = "Contains antiviral agents."
 
-/obj/item/weapon/reagent_containers/syringe/antiviral/New()
-	..()
+/obj/item/weapon/reagent_containers/syringe/antiviral/Initialize()
+	. = ..()
 	reagents.add_reagent("spaceacillin", 15)
-	mode = SYRINGE_INJECT
-	update_icon()
+	//mode = SYRINGE_INJECT //VOREStation Edit - Starts capped
+	//update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/drugs
 	name = "Syringe (drugs)"
 	desc = "Contains aggressive drugs meant for torture."
 
-/obj/item/weapon/reagent_containers/syringe/drugs/New()
-	..()
+/obj/item/weapon/reagent_containers/syringe/drugs/Initialize()
+	. = ..()
 	reagents.add_reagent("space_drugs",  5)
 	reagents.add_reagent("mindbreaker",  5)
 	reagents.add_reagent("cryptobiolin", 5)
-	mode = SYRINGE_INJECT
-	update_icon()
+	//mode = SYRINGE_INJECT //VOREStation Edit - Starts capped
+	//update_icon()
 
-/obj/item/weapon/reagent_containers/syringe/ld50_syringe/choral/New()
-	..()
+/obj/item/weapon/reagent_containers/syringe/ld50_syringe/choral/Initialize()
+	. = ..()
 	reagents.add_reagent("chloralhydrate", 50)
 	mode = SYRINGE_INJECT
 	update_icon()
@@ -378,7 +381,7 @@
 	name = "Syringe (anabolic steroids)"
 	desc = "Contains drugs for muscle growth."
 
-/obj/item/weapon/reagent_containers/syringe/steroid/New()
+/obj/item/weapon/reagent_containers/syringe/steroid/Initialize()
 	..()
 	//reagents.add_reagent("adrenaline",5) //VOREStation Edit - No thanks.
 	reagents.add_reagent("hyperzine",10)

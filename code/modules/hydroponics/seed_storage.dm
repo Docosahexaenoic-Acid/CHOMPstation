@@ -54,7 +54,7 @@
 					/obj/item/seeds/ambrosiavulgarisseed = 3,
 					/obj/item/seeds/plastiseed = 3,
 					/obj/item/seeds/kudzuseed = 2,
-					/obj/item/seeds/nettleseed = 1
+					/obj/item/seeds/rose/blood = 1
 					),
 			list(
 					/obj/item/seeds/ambrosiavulgarisseed = 3,
@@ -69,6 +69,7 @@
 					/obj/item/seeds/bluetomatoseed = 1
 					),
 			list(
+					/obj/item/seeds/durian = 2,
 					/obj/item/seeds/ambrosiadeusseed = 1,
 					/obj/item/seeds/killertomatoseed = 1
 					),
@@ -99,17 +100,20 @@
 		/obj/item/seeds/berryseed = 3,
 		/obj/item/seeds/cabbageseed = 3,
 		/obj/item/seeds/carrotseed = 3,
+		/obj/item/seeds/celery = 3,
 		/obj/item/seeds/chantermycelium = 3,
 		/obj/item/seeds/cherryseed = 3,
 		/obj/item/seeds/chiliseed = 3,
 		/obj/item/seeds/cocoapodseed = 3,
 		/obj/item/seeds/cornseed = 3,
+		/obj/item/seeds/durian = 3,
 		/obj/item/seeds/eggplantseed = 3,
 		/obj/item/seeds/grapeseed = 3,
 		/obj/item/seeds/grassseed = 3,
 		/obj/item/seeds/replicapod = 3,
 		/obj/item/seeds/lavenderseed = 3,
 		/obj/item/seeds/lemonseed = 3,
+		/obj/item/seeds/lettuce = 3,
 		/obj/item/seeds/limeseed = 3,
 		/obj/item/seeds/mtearseed = 2,
 		/obj/item/seeds/orangeseed = 3,
@@ -119,14 +123,18 @@
 		/obj/item/seeds/poppyseed = 3,
 		/obj/item/seeds/potatoseed = 3,
 		/obj/item/seeds/pumpkinseed = 3,
+		/obj/item/seeds/rhubarb = 3,
 		/obj/item/seeds/riceseed = 3,
+		/obj/item/seeds/rose = 3,
 		/obj/item/seeds/soyaseed = 3,
+		/obj/item/seeds/spineapple = 3,
 		/obj/item/seeds/sugarcaneseed = 3,
 		/obj/item/seeds/sunflowerseed = 3,
 		/obj/item/seeds/shandseed = 2,
 		/obj/item/seeds/tobaccoseed = 3,
 		/obj/item/seeds/tomatoseed = 3,
 		/obj/item/seeds/towermycelium = 3,
+		/obj/item/seeds/vanilla = 3,
 		/obj/item/seeds/watermelonseed = 3,
 		/obj/item/seeds/wheatseed = 3,
 		/obj/item/seeds/whitebeetseed = 3
@@ -144,11 +152,13 @@
 		/obj/item/seeds/berryseed = 3,
 		/obj/item/seeds/cabbageseed = 3,
 		/obj/item/seeds/carrotseed = 3,
+		/obj/item/seeds/celery = 3,
 		/obj/item/seeds/chantermycelium = 3,
 		/obj/item/seeds/cherryseed = 3,
 		/obj/item/seeds/chiliseed = 3,
 		/obj/item/seeds/cocoapodseed = 3,
 		/obj/item/seeds/cornseed = 3,
+		/obj/item/seeds/durian = 3,
 		/obj/item/seeds/replicapod = 3,
 		/obj/item/seeds/eggplantseed = 3,
 		/obj/item/seeds/glowshroom = 2,
@@ -156,6 +166,7 @@
 		/obj/item/seeds/grassseed = 3,
 		/obj/item/seeds/lavenderseed = 3,
 		/obj/item/seeds/lemonseed = 3,
+		/obj/item/seeds/lettuce = 3,
 		/obj/item/seeds/libertymycelium = 2,
 		/obj/item/seeds/limeseed = 3,
 		/obj/item/seeds/mtearseed = 2,
@@ -168,14 +179,19 @@
 		/obj/item/seeds/potatoseed = 3,
 		/obj/item/seeds/pumpkinseed = 3,
 		/obj/item/seeds/reishimycelium = 2,
+		/obj/item/seeds/rhubarb = 3,
 		/obj/item/seeds/riceseed = 3,
+		/obj/item/seeds/rose = 3,
 		/obj/item/seeds/soyaseed = 3,
+		/obj/item/seeds/spineapple = 3,
 		/obj/item/seeds/sugarcaneseed = 3,
 		/obj/item/seeds/sunflowerseed = 3,
 		/obj/item/seeds/shandseed = 2,
 		/obj/item/seeds/tobaccoseed = 3,
 		/obj/item/seeds/tomatoseed = 3,
 		/obj/item/seeds/towermycelium = 3,
+		/obj/item/seeds/vanilla = 3,
+		/obj/item/seeds/wabback = 2,
 		/obj/item/seeds/watermelonseed = 3,
 		/obj/item/seeds/wheatseed = 3,
 		/obj/item/seeds/whitebeetseed = 3
@@ -445,6 +461,27 @@
 					piles -= N
 					qdel(N)
 			break
+	if(hacked || emagged)
+		for (var/datum/seed_pile/N in piles_contra)
+			if (N.ID == ID)
+				if (task == "vend")
+					var/obj/O = pick(N.seeds)
+					if (O)
+						--N.amount
+						N.seeds -= O
+						if (N.amount <= 0 || N.seeds.len <= 0)
+							piles_contra -= N
+							qdel(N)
+						O.loc = src.loc
+					else
+						piles_contra -= N
+						qdel(N)
+				else if (task == "purge")
+					for (var/obj/O in N.seeds)
+						qdel(O)
+						piles_contra -= N
+						qdel(N)
+				break
 	updateUsrDialog()
 
 /obj/machinery/seed_storage/attackby(var/obj/item/O as obj, var/mob/user as mob)
@@ -461,21 +498,38 @@
 		if (loaded)
 			user.visible_message("[user] puts the seeds from \the [O.name] into \the [src].", "You put the seeds from \the [O.name] into \the [src].")
 		else
-			user << "<span class='notice'>There are no seeds in \the [O.name].</span>"
+			to_chat(user, "<span class='notice'>There are no seeds in \the [O.name].</span>")
 		return
-	else if(istype(O, /obj/item/weapon/wrench))
+	else if(O.is_wrench())
 		playsound(loc, O.usesound, 50, 1)
 		anchored = !anchored
-		user << "You [anchored ? "wrench" : "unwrench"] \the [src]."
-	else if(istype(O, /obj/item/weapon/screwdriver))
+		to_chat(user, "You [anchored ? "wrench" : "unwrench"] \the [src].")
+	else if(O.is_screwdriver())
 		panel_open = !panel_open
 		to_chat(user, "You [panel_open ? "open" : "close"] the maintenance panel.")
 		playsound(src, O.usesound, 50, 1)
 		overlays.Cut()
 		if(panel_open)
 			overlays += image(icon, "[initial(icon_state)]-panel")
-	else if((istype(O, /obj/item/weapon/wirecutters) || istype(O, /obj/item/device/multitool)) && panel_open)
+	else if((O.is_wirecutter() || istype(O, /obj/item/device/multitool)) && panel_open)
 		wires.Interact(user)
+
+/obj/machinery/seed_storage/emag_act(var/remaining_charges, var/mob/user)
+	if(!src.emagged)
+		emagged = 1
+		if(lockdown)
+			to_chat(user, "<span class='notice'>\The [src]'s control panel thunks, as its cover retracts.</span>")
+			lockdown = 0
+		if(req_access || req_one_access)
+			req_access = list()
+			req_one_access = list()
+			to_chat(user, "<span class='warning'>\The [src]'s access mechanism shorts out.</span>")
+			var/datum/effect/effect/system/spark_spread/sparks = new /datum/effect/effect/system/spark_spread()
+			sparks.set_up(3, 0, get_turf(src))
+			sparks.start()
+			visible_message("<span class='warning'>\The [src]'s panel sparks!</span>")
+			qdel(sparks)
+		return 1
 
 /obj/machinery/seed_storage/proc/add(var/obj/item/seeds/O as obj, var/contraband = 0)
 	if (istype(O.loc, /mob))
@@ -489,6 +543,8 @@
 	var/newID = 0
 
 	if(contraband)
+		var/datum/seed_pile/final_pile = piles[piles.len]
+		newID = final_pile.ID + 1
 		for (var/datum/seed_pile/N in piles_contra)
 			if (N.matches(O))
 				++N.amount
