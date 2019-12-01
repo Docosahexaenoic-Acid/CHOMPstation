@@ -1,7 +1,7 @@
 //
 // "Off-duty" jobs are for people who want to do nothing and have earned it.
 //
-
+//TFF 19/5/19 - Capitalisation fix
 /datum/job/offduty_civilian
 	title = "Off-duty Worker"
 	latejoin_only = TRUE

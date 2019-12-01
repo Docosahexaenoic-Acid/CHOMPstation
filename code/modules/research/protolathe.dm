@@ -132,6 +132,7 @@
 	for(var/mat in materials)
 		max_res_amount -= materials[mat]
 
+	//TFF 2/5/19: Polaris fix for Synthesisers inserting more than what is present
 	if(materials[S.material.name] + amnt <= max_res_amount)
 		if(S && S.get_amount() >= 1)
 			var/count = 0

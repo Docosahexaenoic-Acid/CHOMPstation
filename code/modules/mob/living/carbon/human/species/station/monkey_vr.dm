@@ -1,3 +1,4 @@
+//TFF 30/4/19: Ports VoreStation Remains Option - refactor species names
 /datum/species/monkey/shark
 	name = SPECIES_MONKEY_AKULA
 	name_plural = "Sobaka"

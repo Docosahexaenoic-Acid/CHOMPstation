@@ -7,6 +7,8 @@
 
 	//Every hour playing this role gains this much time off. (Can be negative for off duty jobs!)
 	var/timeoff_factor = 3
+//TFF 19/5/19 - Port VOREStation's completed Timeclock code - Add check to prevent switching mid-round without HOP for command jobs
+	var/disallow_jobhop = FALSE
 
 	//Disallow joining as this job midround from off-duty position via going on-duty
 	var/disallow_jobhop = FALSE

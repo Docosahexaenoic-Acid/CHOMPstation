@@ -3,14 +3,15 @@
 /mob/living/simple_animal/sculpture
 	name = "\improper sculpture"
 	desc = "It's some kind of hastily-painted human-size stone sculpture. Just looking at it makes you feel nervous."
+	icon = 'icons/mob/sculpture.dmi'
 	icon_state = "sculpture"
 	icon_living = "sculpture"
 	icon_dead = "sculpture"
 	emote_hear = list("makes a faint scraping sound")
 	emote_see = list("twitches slightly", "shivers")
-	response_help  = "touches the"
-	response_disarm = "pushes the"
-	response_harm   = "hits the"
+	response_help  = "touches"
+	response_disarm = "pushes"
+	response_harm   = "hits"
 	see_in_dark = 8 //Needs to see in darkness to snap in darkness
 	pass_flags = PASSTABLE
 	var/response_snap = "snapped the neck of" //Past tense because it "happened before you could see it"

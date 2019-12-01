@@ -271,7 +271,8 @@
 			apply_damage(real_damage, hit_dam_type, hit_zone, armour, soaked, sharp=attack.sharp, edge=attack.edge)
 
 		if(I_DISARM)
-			add_attack_logs(H,src,"Disarmed")
+			// Having this log every time someone disarms even when the disarm does nothing is REALLY ANNOYING. -Erik
+			// add_attack_logs(H,src,"Disarmed")
 
 			M.do_attack_animation(src)
 
@@ -295,6 +296,8 @@
 			if(last_push_time + 30 > world.time)
 				visible_message("<span class='warning'>[M] has weakly pushed [src]!</span>")
 				return
+
+			add_attack_logs(H,src,"Disarmed")
 
 			var/randn = rand(1, 100)
 			last_push_time = world.time

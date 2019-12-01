@@ -209,6 +209,7 @@
 	icon_state = "gripper-mech"
 	desc = "A large, heavy-duty grasping tool used in construction of mechs."
 
+	//TFF 2/5/19: Add ability to use micromech parts in constructing said micromech. Ported fix from VoreStation.
 	can_hold = list(
 		/obj/item/mecha_parts/part,
 		/obj/item/mecha_parts/micro/part,		//VOREStation Edit: Allow construction of micromechs,

@@ -313,7 +313,7 @@
 	else
 		to_chat(usr, "<span class='notice'>You must move an ore box up to the drill before you can unload it.</span>")
 
-
+//TFF 25/5/19 - fix infinite frame issue
 /obj/machinery/mining/brace
 	name = "mining drill brace"
 	desc = "A machinery brace for an industrial drill. It looks easily two feet thick."

@@ -36,6 +36,7 @@
 	vore_max_size = RESIZE_HUGE
 	vore_min_size = RESIZE_SMALL
 	vore_pounce_chance = 0 // Beat them into crit before eating.
+	vore_ignores_undigestable = 0
 	vore_icons = SA_ICON_LIVING
 
 /mob/living/simple_animal/hostile/deathclaw/Login()

@@ -7,6 +7,13 @@
 #define Z_LEVEL_EVENT_AREAS							6
 #define Z_LEVEL_EMPTY_NORTHERN_STAR					7
 
+
+//TFF: Camera network defines
+#define NETWORK_MEDICAL_OUTPOST "Medical Outpost"
+//TFF 15/10/19 - Define T-comms and Xenobio camera networks
+#define NETWORK_TCOMMS "Telecommunications"
+#define NETWORK_XENOBIO "Xenobiology"
+
 /datum/map/northern_star
 	name = "Northern Star"
 	full_name = "NCS Northern Star"
@@ -42,8 +49,10 @@
 							NETWORK_ENGINE,
 							NETWORK_ENGINEERING,
 							NETWORK_ENGINEERING_OUTPOST,
-							NETWORK_DEFAULT,
+							//TFF: Unneeded network name, associated camera switched to Northern Star
+//							NETWORK_DEFAULT,
 							NETWORK_MEDICAL,
+							NETWORK_MEDICAL_OUTPOST,
 							NETWORK_MINE,
 							NETWORK_NORTHERN_STAR,
 							NETWORK_RESEARCH,
@@ -51,8 +60,11 @@
 							NETWORK_ROBOTS,
 							NETWORK_PRISON,
 							NETWORK_SECURITY,
-							NETWORK_INTERROGATION,
-							NETWORK_SOLARS
+							//TFF: One camera? Move to Security Network
+//							NETWORK_INTERROGATION,
+							NETWORK_SOLARS,
+							//TFF 16/10/19 - Add T-comms network,
+							NETWORK_TCOMMS
 							)
 
 	secondary_networks = list(
@@ -67,6 +79,10 @@
 
 	allowed_spawns = list("Arrivals Shuttle","Gateway", "Cryogenic Storage", "Cyborg Storage", "Elevator")
 
+	unit_test_exempt_areas = list(
+		/area/Mime,
+		/area/Clown,
+		/area/engineering/dorm_atmos)
 
 /datum/map/northern_star/perform_map_generation()
 	new /datum/random_map/automata/cave_system(null, 1, 1, Z_LEVEL_MAIN_NORTHERN_STAR, world.maxx, world.maxy) // Create the mining Z-level.

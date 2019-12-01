@@ -179,6 +179,7 @@
 			to_chat(user, "<span class='warning'>The [src] doesn't accept [S.material]!</span>")
 			return
 
+	//TFF 2/5/19: Polaris fix for Synthesisers inserting more than what is present
 		var/sname = "[S.name]"
 		var/amnt = S.perunit
 		if(materials[S.material.name] + amnt <= res_max_amount)

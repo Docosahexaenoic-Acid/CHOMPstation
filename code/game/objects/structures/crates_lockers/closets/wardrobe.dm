@@ -139,6 +139,7 @@
 	icon_state = "orange"
 	icon_closed = "orange"
 
+	//CHOMPStation edit TFF 22/9/19 - refactor of prison jumpsuit
 	starts_with = list(
 		/obj/item/clothing/under/color/prison = 3,
 		/obj/item/clothing/shoes/orange = 3)

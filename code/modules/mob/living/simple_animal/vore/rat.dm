@@ -24,9 +24,9 @@
 	emote_see = list("runs in a circle", "shakes", "scritches at something")
 	say_maybe_target = list("Squeek?")
 	say_got_target = list("SQUEEK!")
-	response_help = "pets the"
-	response_disarm = "bops the"
-	response_harm = "hits the"
+	response_help = "pets"
+	response_disarm = "bops"
+	response_harm = "hits"
 	attacktext = list("ravaged")
 	friendly = list("nuzzles", "licks", "noses softly at", "noseboops", "headbumps against", "leans on", "nibbles affectionately on")
 
@@ -43,8 +43,9 @@
 	mount_offset_y = 10
 
 	vore_active = TRUE
-	vore_capacity = 1
+	vore_capacity = 2
 	vore_pounce_chance = 45
+	vore_ignores_undigestable = 0
 	vore_icons = SA_ICON_LIVING | SA_ICON_REST
 
 	var/life_since_foodscan = 0
